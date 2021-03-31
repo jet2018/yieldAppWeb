@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %} 
+
+
+{% block content %}
+
+
+  <div class="card">
+        <div class="card-body pb-0">
+          <h3 class="text-primary">Meet all specialists</h3>
+          <div class="row d-flex align-items-stretch">
+            {% for doctor in doctors %}
+            <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
+              <div class="card bg-light">
+                <div class="card-header text-muted border-bottom-0">
+                  {{ doctor.role.get_display_text }}
+                </div>
+                <div class="card-body pt-0">
+                  <div class="row">
+                    <div class="col-7">
+                      <h2 class="lead"><b>{{ doctor.user.first_name|capfirst }} {{ doctor.user.last_name|capfirst }} {{ doctor.user.username|capfirst }}</b></h2>
+                      <p class="text-muted text-sm"><b>About: </b> {{ doctor.bio|truncatechars:100}}</p>
+                      <p class="text-muted text-sm"><b>Experience: </b> {{ doctor.years_of_experiance }} year{{ doctor.years_of_experiance|pluralize }}</p>
+                      <ul class="ml-4 mb-0 fa-ul text-muted">
+                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span>{{doctor.address}}</li>
+                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> {{ doctor.phone_number }}</li>
+                      </ul>
+                    </div>
+                    <div class="col-5 text-center">
+					{% if doctor.profile_pik %}
+                      <img src="{{ doctor.profile_pik.url }}" alt="" style="height: 70%; width: 100%;" class="img-circle img-fluid">
+                     {% else %}
+                     <img src="{% static 'images/images.jpg' %}" alt="" style="height: 70%; width: 100%;" class="img-circle img-fluid">
+                     {% endif %}
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="text-right">
+                  	{% if not doctor.user == user %}
+                    <button onclick="star({{doctor.id}})" id="btnstar{{doctor.id}}" data-url="{% url 'doctor:star' %}" class="btn btn-sm bg-teal">
+                      <i class="fas fa-star"></i>
+                      <span id="starCounter{{doctor.id}}">{{ doctor.total_stars }} star{{doctor.total_stars|pluralize}}</span>
+                    </button>
+                    <a type="button" class="btn btn-sm text-light btn-primary" data-toggle="modal" data-target="#exampleModalCenter" onclick="showUp({{doctor.id}})" data-id="{{ doctor.id }}">
+                      <i class="fas fa-user"></i> Contact
+                    </a>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% empty %}
+              <h2 class="text-center my-5 mx-5 text-warning"> <i class="fas fa-mask" style="font-size: 100px;"></i> No specialists are available yet</h2>
+{% endfor %}
+          </div>
+        </div>
+      </div>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" data-id="" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	<div class="alert" id="response"></div>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h5 class="modal-title" id="exampleModalLongTitle">Send a notification</h5>
+		</div>
+		<div class="modal-body">
+		<form action="{% url 'doctor:notify' %}" method="POST"  id="notificationForm">
+      {% csrf_token %}
+      <input type="text" value="" name="id" hidden id="hiddenField">
+      <textarea name="body" placeholder="Write something..." class="form-control" id="body" cols="15" rows="5" style="resize: none;"></textarea>
+      <button type="submit" class="float-right btn-success btn btn-sm mt-2"><i class="fas fa-paper-plane"></i> Send now</button>
+    </form>
+		</div>
+		<!-- <div class="modal-footer">
+		  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		  <button type="button" class="btn btn-primary">Save changes</button>
+		</div> -->
+	  </div>
+	</div>
+  </div>
+
+{% endblock content %}
+
+{% block script %}
+<script>
+
+	function star(id) {
+        url1 = $('#btnstar'+id).data('url')
+        $.ajax({
+            url: url1,
+            data: {
+                'id': id,
+            },
+            type: 'get',
+            success: function (response) {
+                if (response.result == 'ok') {
+                    liker = ''
+                    if (response.countNow == 1) {
+                        liker = 'star';
+                    } else {
+                        liker = "stars";
+                    }
+                    $('#starCounter' + id).text( response.countNow +
+                        ' ' + liker);
+                }
+            }
+
+        });
+    }
+
+    function showUp(id){
+      $('#exampleModal').modal('show')
+      $('#hiddenField').val(id)
+    }
+
+    $('#notificationForm').on('submit', function(e){
+      e.preventDefault()
+     let data = $(this).serialize()
+     let url = $(this).attr('action')
+      
+    $.ajax({
+      data:data,
+      url: url,
+      type: 'POST',
+      dataType: 'json',
+      success: function(response){
+        if(response.code == true){
+          $('#response').addClass('alert-primary').text(response.message)
+          $('#notificationForm').trigger('reset')
+          setTimeout(function(){
+            $('#exampleModal').modal('hide')
+          }, 4000)
+        }else{
+          $('#response').addClass('alert-danger').text(response.message)
+        }
+      }
+    })
+    })
+    </script>
+{% endblock script %}

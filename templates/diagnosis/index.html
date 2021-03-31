@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="text-center mt-5 pt-5 container">
+	<a href="{% url 'diagonise:results' %}" class="btn text-info">Continue to your previous tests &nbsp;<i class="fa fa-arrow-right"></i></a>
+	<div class="card p-3">
+		<h3 class="my-5 text-muted card-title">Welcome to the diagnosis section!</h3>
+		<div class="card-body text-muted">
+			<p>Hello {{user.username|capfirst}}, due to the need to have live pictures/photos we have shifted this servive to our <a href="https://drive.google.com/drive/folders/1vpTTZJqTJKMHYYDtcOMPfoy-JzGZO0l3">Mobile app.</a> </p>
+			<p>
+				From the mobile app, you will take a live photo from your garden, then it will do the testing, the results will be fed here for any remedies/steps to take up next. 
+			</p>
+			<p>
+				We have left our web app majorly for networking with our farmers.
+			</p>
+			<p>
+				Already done your prediction, and wondering what next??
+				<p>
+				If you have your results, click <span class="text-success">Proceed to remedy</span> below to proceed. 
+				</p>
+			</p>
+
+			<blockquote class="text-success">Note that the response code you enter below should be obtained from your mobile app's response after testing.</blockquote>
+
+			{% if msg != "" %}
+			<span class="text-danger">{{msg}}</span>
+			{% else %}
+			{% endif %}
+			<div class="card-footer">
+				<form class="float-left" id="codeForm" action="{% url 'diagonise:analyse' %}" method="POST">
+					{% csrf_token %}
+					<div class="form-group">
+						<label for="disease">Enter the code from the mobile app test below.</label>
+						<input type="text" id="disease" name="code" placeholder="Enter code here" class="form-control">
+					</div>
+				</form>
+				<button id="submitDisease" class="btn btn-success btn-user float-right disabled">
+					Proceed to remedy <i class="fa fa-arrow-right"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock content %}
+{% block script %}
+	<script>
+		$("#disease").keyup(function () {
+			if ($(this).val() == "") {
+				$('#submitDisease').addClass('disabled')
+			}else{
+				$('#submitDisease').removeClass('disabled')
+			}
+		})
+
+		// submit the response for remedies
+		$('#submitDisease').click(function(e){
+			$('#codeForm').trigger('submit')
+		})
+
+	</script>
+{% endblock script %}

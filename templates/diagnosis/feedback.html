@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="content">
+      <!-- <div class="container "> -->
+      	<h5 class="font-weight-bold p-3 text-muted text-centered">These are the samples you have tested with us in their order from the most lates</h5>
+            <a href="{% url 'diagonise:index' %}" class="btn text-info"><i class="fa fa-arrow-left"></i> Back to testing</a>
+
+            <div class="row mx-auto">
+              {% if resp %}
+        <div class="card col-md-3 bg-dark text-muted">
+         <div class="p-1">
+          <h6 class="text-muted font-weight-bold p-2">Your recent test results.</h6>
+          <h6 ><span class="font-weight-bold">Type:</span> {{resp.type_of_test|capfirst}}</h6>
+          <hr>
+          <h6><span class="font-weight-bold">Results:</span> {{resp.predicate_disease|capfirst}}</h6>
+          <hr>
+          <h6><span class="font-weight-bold">Diagnosis:</span> {{resp.diagnosis_text|capfirst|safe}}</h6>
+          </div>
+         </div>
+         {% endif %}
+              <div class="{% if resp %} col-md-9 {% else %} ml-md-1 col-md-12 {% endif %}">
+                  <div class="text-right text-lg text-muted p-2">Your history tests</div>
+                <div class="row">
+
+      	{% for sample in all_tests %}
+            <div class="card {% if not resp %} col-md-5 col-sm-12 ml-md-1 {% else %} col-sm-12 col-md-6 {% endif %}" >
+                  
+                <div class="card-body">
+                    <h5>
+                    <span class="font-weight-bold">Result on:</span> {{ sample.tested_on|date:"d, M, Y" }} at {{ sample.tested_on|date:"g:i A" }}</h5>
+                    <h5><span class="font-weight-bold">Results:</span> {{ sample.predicate_disease }}</h5>
+                    <p class="card-text">
+                      <span class="font-weight-bold">Suggested remmedy</span>: &nbsp;{{ sample.diagnosis_text|capfirst|safe }}</p>
+                    <!-- <a href="#" class="btn btn-primary">Has this worked for you?</a> -->
+              </div>
+        </div>
+        {% empty %}
+        <div class="alert alert-info w-100 text-center p-3">You haven't tested anything!!</div>
+        {% endfor %}
+        </div>
+        </div>
+        
+        </div>
+  <!-- </div> -->
+</section>
+{% endblock content %}
+

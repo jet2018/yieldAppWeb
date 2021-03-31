@@ -1,0 +1,5 @@
+/bin
+/lib
+/pyvenv.cfg
+/media-root
+/local_settings.py

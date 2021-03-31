@@ -1,0 +1,267 @@
+{% extends 'base.html' %} {% load humanize %} {% load static %} {% block content %}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Read notification</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="{% url 'posts:index' %}">Home</a></li>
+                    <li class="breadcrumb-item active">Notifications</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-3">
+            <a href="{% url 'doctor:compose'%}" class="btn btn-primary btn-block mb-3">Compose</a>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Menu</h3>
+
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="nav nav-pills flex-column">
+                        <li class="nav-item active">
+                            <a type="button" onclick="SwitchToInbox()" class="nav-link">
+                                <i class="fas fa-inbox"></i> Inbox
+                                <span class="badge bg-primary float-right" id="inboxcouut">{{ received|length}}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a type="button" onclick="SwitchToSent()" class="nav-link">
+                                <i class="far fa-envelope"></i> Sent
+                                <span class="badge bg-primary float-right" id="sentcouut">{{ sent|length }}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item active">
+                            <a type="button" onclick="SwitchToUnread()" class="nav-link">
+                                <i class="fas fa-check-circle"></i> Unread
+                                <span class="badge bg-primary float-right" id="unreadcouut">{{ unread|length}}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.card-body -->
+            </div>
+        </div>
+        <!-- /.col -->
+        <div class="col-md-9">
+            <div class="card card-primary card-outline">
+                <div class="card-header">
+                    <h3 class="card-title">Read Notification</h3>
+
+                    <div class="card-tools d-none">
+                <a onclick="reloader()" class="btn btn-tool bg-success"><i class="fa fa-sync-alt"></i> Refresh</a>
+            </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body p-0">
+            <div class="mailbox-read-info">
+                <h5>You got a new notification from {{notification.fro.user.username|capfirst}}</h5>
+                <h6>From: {{notification.fro.user.email}}
+                    <span class="mailbox-read-time float-right">{{notification.sent_on|naturaltime}}</span></h6>
+                </div>
+                <!-- /.mailbox-controls -->
+                <div class="mailbox-read-message">
+                    {{ notification.body|capfirst|linebreaks }}
+
+
+                    <br>
+                    <br>
+                    <p>From, {{notification.fro.user.username|capfirst}}</p>
+                </div>
+                <!-- /.mailbox-read-message -->
+            </div>
+            <hr/>
+            <div class="text-center">--Replies--</div>
+            <div id="new_replies"></div>
+            <div id="replies_" class="{% if reply.fro.user == user %} ml-2 {% else %} mr-2 {% endif %} ">
+                {% for reply in replies %}
+                <!-- <hr> -->
+                <div class="{% if reply.fro.user == user %}  p-2 {% else %} mr-2 {% endif %} " 
+                id="reply_{{reply.id}}">
+                <div class="user-block w-100 ">
+                        <span class="text-center">
+                         <a href="#" class=" ml-2 text-center mr-2">
+                             {% if reply.fro.user == user %}
+                            <i class="fa fa-forward text-muted"></i>
+                             You 
+                             {% else %}
+                             <i class="fa fa-forward"></i>
+                             {{reply.fro.user.username|capfirst }} 
+                             {% endif %}
+                             <span class="text-muted text-sm ml-3">{{ reply.sent_on|naturaltime }}</span>
+                         </a>
+                         {% if reply.fro.user == user %}
+                         <div class="text-left">
+
+                          <a href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="float-right btn-tool"><i class="fas fa-ellipsis-v text-lg p-2"></i></a>
+                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item btn" data-id="{{ reply.id }}" id="reply{{reply.id}}" data-url="{% url 'doctor:deleteReply'  reply.id %} " onclick="deleteReply({{reply.id}})"><i class="fas fa-minus-circle "></i> Delete</a>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                   
+                </span>
+
+            </div>
+            <div class="px-2">
+                {{ reply.body|capfirst }}
+            </div>
+        </div>
+        {% empty %} 
+        <h6 class="text-center">No replies yet!</h6>
+    
+</div>
+    {% endfor %}
+</div>
+<!-- {{replies}} -->
+<div></div>
+
+<!-- /.card-footer -->
+<div class="card-footer ">
+    <div class="float-right ">
+        <button type="button" class="btn btn-default" data-toggle="modal" 
+        data-target="#exampleModalCenter " onclick="showUp() " data-id="{{ notification.id }} ">
+            <i class="fas fa-reply "></i> Reply
+        </button>
+    </div>
+    {% if notification.fro.user == user %}
+    <button type="button " class="btn btn-default" onclick="deletePost({{ notification.id }})" data-id="{{ notification.id }}" id = "deleteNotification"><i class="far fa-trash-alt "></i> Delete</button>
+    {% endif %}
+
+</div>
+<!-- /.card-footer -->
+</div>
+<!-- /.card -->
+</div>
+<!-- /.col -->
+</div>
+</section>
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" data-id="" tabindex="-1 " role="dialog" aria-labelledby="exampleModalCenterTitle " aria-hidden="true ">
+    <div class="alert " id="response"></div>
+    <div class="modal-dialog modal-dialog-centered " role="document ">
+        <div class="modal-content ">
+            <div class="modal-header ">
+                <h5 class="modal-title " id="exampleModalLongTitle ">Reply to {{ notification.fro.user.username|capfirst }}</h5>
+            </div>
+            <div class="modal-body ">
+            <form action="{% url 'doctor:submit_reply' notification.id %}" method = "POST" data-id="{{notification.id}}" id="notificationForm">
+                    {% csrf_token %}
+                    <textarea name="body" placeholder="Write something... " class="form-control " id="body" cols="15 " rows="5 " style="resize: none; "></textarea>
+                    <button type="submit " class="float-right btn-success btn btn-sm mt-2 "><i class="fas fa-paper-plane "></i> Reply now</button>
+                </form>
+            </div>
+            <!-- <div class="modal-footer ">
+		  <button type="button " class="btn btn-secondary " data-dismiss="modal ">Close</button>
+		  <button type="button " class="btn btn-primary ">Save changes</button>
+		</div> -->
+    </div>
+</div>
+</div>
+
+
+{% endblock content %} {% block script %}
+<script>
+    function reloader(){
+        $('#new_replies').load(location.href+' #replies_')
+        $('.card-tools').fadeOut('slow').addClass('d-none')
+    }
+
+    function deletePost(id) {
+        let myalert = confirm("Are you sure you want to delete this notification?")
+        if (myalert != false) {
+        $.ajax({
+          url: '/doctors/delete_notification_sent/',
+          data: {
+            'id':id
+          },
+          type: 'GET',
+          dataType: 'json',
+          success: function(res){
+            if (res.code) {
+                window.location.href = "/doctors/all_notofications/"
+            }
+          }
+        })
+    }
+  }
+
+    function deleteReply(id) {
+        var alert1 = confirm("Are you sure you to delete this reply?")
+        if (alert1 != false) {
+            let url = $('#reply' + id).data('url')
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                success: function(res) {
+                    if (res.code) {
+                        $('#reply_' + id).fadeOut('slow').remove()
+                    } else {
+                        alert(res.message)
+                    }
+
+                }
+            })
+
+        }
+
+    }
+
+    function showUp() {
+        $('#exampleModalCenter').modal('show')
+    }
+
+    $('#notificationForm').on('submit', function(e) {
+        e.preventDefault()
+        let data = $(this).serialize()
+        let url1 = $(this).attr('action')
+
+        $.ajax({
+            data:data,
+            url: url1,
+            type: 'POST',
+            dataType: 'json',
+            success: function(response) {
+                if (response.code == true) {
+                    $('#response').addClass('alert-primary').text(response.message)
+                    $('#notificationForm').trigger('reset')
+                    setTimeout(function() {
+                        $('#exampleModalCenter').modal('hide')
+                        $('#new_replies').load(location.href+' #replies_')
+                        $('.card-tools').fadeOut('slow').addClass('d-none')
+                    }, 4000)
+
+                } else {
+                    $('#response').addClass('alert-danger').text(response.message)
+                }
+            },
+            complete:  function() {
+                $('.card-tools').fadeIn('slow').removeClass('d-none')
+            }
+        })
+    })
+
+
+    $('#deleteNotification').on('click', function () {
+        
+    })
+</script>
+{% endblock script %}

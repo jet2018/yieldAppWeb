@@ -1,0 +1,255 @@
+{% extends 'basic.html' %}
+
+{% block content %}
+<div class="register-box">
+  <div class="register-logo">
+   <a href="{% url 'posts:index' %}" class="text-warning"><b>Yield</b>Up</a>
+ </div>
+
+ <div class="card">
+  <div class="card-body register-card-body">
+    <p class="login-box-msg">Register a new membership</p>
+    <div id="return-messages" class="alert"></div>
+    <form action="{% url 'posts:register' %}" method="post" id="test-form">
+      {% csrf_token %}
+      <div class="input-group mb-3">
+        <input type="text" id="fname" class="form-control" oninput ="validateFname()" name="fname" placeholder="First name">
+        <div class="input-group-append">
+          <div class="input-group-text">
+            <span class="fas fa-user-circle"></span>
+          </div>
+        </div>
+      </div>
+      <div class="input-group mb-3">
+        <input type="text" id="lname" class="form-control" oninput="validateLname()" name="lname" placeholder="Last name">
+        <div class="input-group-append">
+          <div class="input-group-text">
+            <span class="fas fa-user-plus"></span>
+          </div>
+        </div>
+      </div>
+      <div class="input-group mb-3">
+        <input type="text" id="username" class="form-control" oninput="validateUsername()" name="username" placeholder="Username">
+        <div class="input-group-append">
+          <div class="input-group-text">
+            <span class="fas fa-user-check"></span>
+          </div>
+        </div>
+      </div>
+      <div class="input-group mb-3">
+        <input type="email" id="email" class="form-control" oninput="validateEmail()" name="email" placeholder="Email">
+        <div class="input-group-append">
+          <div class="input-group-text">
+            <span class="fas fa-envelope"></span>
+          </div>
+        </div>
+      </div>
+      <div class="input-group mb-3">
+        <input type="password" id="password1" class="form-control" oninput="validatePass1()" name="password1" placeholder="Password">
+        <div class="input-group-append">
+          <div class="input-group-text">
+            <span class="fas fa-lock"></span>
+          </div>
+        </div>
+      </div>
+      <div class="input-group mb-3">
+        <input type="password" id="password2" class="form-control"  oninput="validatePass2()" name="password2" placeholder="Retype password">
+        <div class="input-group-append">
+          <div class="input-group-text">
+            <span class="fas fa-lock-open"></span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-7">
+          <div class="icheck-primary">
+            <input type="checkbox" required id="agreeTerms" name="terms">
+            <label for="agreeTerms">
+             I agree to the <a>terms</a>
+           </label>
+         </div>
+       </div>
+       <!-- /.col -->
+       <div class="col-5">
+        <button type="submit" id="registerBtn" class="btn btn-warning btn-block">Register</button>
+      </div>
+      <!-- /.col -->
+    </div>
+  </form>
+
+  <a href="{% url 'posts:login' %}" class="text-center">I already have a membership</a>
+</div>
+<!-- /.form-box -->
+</div><!-- /.card -->
+</div>
+{% endblock content %}
+{% block script %}
+<script type="text/javascript">
+
+  function validateFname(){
+    let fname = $('#fname').val()
+    if (fname == "") {
+      $('#return-messages').text("First name is still empty")
+      return false
+    }
+    else if (fname.length < 3) {
+      $('#return-messages').text("First name is still invalid")
+      return false
+    }
+    else{
+      $('#return-messages').text("")
+      return true
+    }
+  }
+
+  function validateUsername(){
+    let username = $('#username').val()
+    if (username == "") {
+      $('#return-messages').text("Username is still empty")
+      return false
+    }
+    else if (username.length < 4) {
+      $('#return-messages').text("Create a stronger username")
+      return false
+    }
+    else{
+      $('#return-messages').text("")
+      return true
+    }
+  }
+
+  function validatePass2(){
+    let password2 = $('#password2').val()
+    let password1 = $('#password1').val()
+    if (password2 != password1) {
+      $('#return-messages').text("Please confirm your password")
+      return false
+    }
+    else{
+      $('#return-messages').text("")
+      return true
+    }
+  }
+
+   function validatePass1(){
+    let password1 = $('#password1').val()
+    let lname = $('#lname').val()
+    let username = $('#username').val()
+    let email = $('#email').val()
+    if (password1 == "") {
+      $('#return-messages').text("Please create a password")
+      return false
+    }
+    else if (password1.length < 6) {
+      $('#return-messages').text("Password is still weak")
+      return false
+    }
+    else if (password1.length >= 6 && password1.length <= 8) {
+      $('#return-messages').text("Password is still medium")
+      return true
+    }
+    else if (password1.length > 8) {
+      $('#return-messages').text("")
+      return true
+    }else if (password1 == lname || password1 == email || password1 == username) {
+      $('#return-messages').text("Password cannot be similar to any other credentials")
+      return false
+    }
+    else{
+      $('#return-messages').text("")
+      return true
+    }
+  }
+
+  function validateLname(){
+    let lname = $('#lname').val()
+    if (lname == "") {
+      $('#return-messages').text("Last name is still empty")
+      return false
+    }
+    else if (lname.length < 3) {
+      $('#return-messages').text("Last name is still invalid")
+      return false
+    }
+    else{
+      $('#return-messages').text("")
+      return true
+    }
+  }
+
+  function validateEmail(){
+    let email = $('#email').val()
+    if (email == "") {
+      $('#return-messages').text("Email is still empty")
+      return false
+    }
+    else if (email.length < 5) {
+      $('#return-messages').text("Email is still invalid")
+      return false
+    }else if(email.indexOf('@') < 2){
+      $('#return-messages').text("Email is still invalid")
+      return false
+    }else if(email.charAt(email.indexOf('@') + 1) == "." ){
+      $('#return-messages').text("Email is still invalid")
+      return false
+    }
+     else if (email.indexOf('.') < 3){
+      $('#return-messages').text("Email is still invalid")
+      return false
+    } else if(email.charAt(email.indexOf('.') + 1) == "" ){
+      $('#return-messages').text("Email is still invalid")
+      return false
+    } else if(email.charAt(email.indexOf('.') + 2) == "" ){
+      $('#return-messages').text("Email is still invalid")
+      return false
+    }
+    else{
+      $('#return-messages').text("")
+      return true
+    }
+  }
+
+
+
+  // function validated(){
+  //   
+  //   let lname = $('#lname').val()
+  //   let username = $('#username').val()
+  //   let email = $('#email').val()
+  //   let password1 = $('#password1').val()
+  //   let password2 = $('#password2').val()
+
+  //   if (fname == "" ) {
+
+  //   }
+  // }
+
+  $(document).on('submit', "#test-form", function (e) {
+    e.preventDefault()
+    $('#registerBtn').text("Please wait...")
+    form = $(this).serialize();
+    if(!validatePass2){
+      alert("Password not matching")
+    }else{
+    $.ajax({
+      type: 'post',
+      url: $(this).attr('action'),
+      data: form,
+      success: function (response) {
+       rs = response.result
+       cssNow = response.class
+       $('#return-messages').addClass('alert-' + cssNow)
+       $('#return-messages').text(rs)
+       $('#registerBtn').text("Register")
+       if (rs == 'Account created successfully, you can now login') {
+        $('#test-form').trigger('reset')
+        window.location.href = '/login'
+      }
+    }
+
+
+  })
+  }
+  })
+</script>
+{% endblock script %}

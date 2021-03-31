@@ -1,0 +1,663 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% load widget_tweaks %}
+{% block content %}
+
+<!-- 
+{{posts}}
+<br>
+{{profile}} -->
+<!-- Content Header (Page header) -->
+<section id="fullProfilePage">
+	<div id="new_refresh"></div>
+	<section class="content-header">
+		<div class="container-fluid">
+			<div class="row mb-2">
+				<div class="col-sm-6">
+					<h1>Profile</h1>
+				</div>
+				<div class="col-sm-6">
+					<ol class="breadcrumb float-sm-right">
+						<li class="breadcrumb-item"><a href="{% url 'posts:index' %}">Home</a></li>
+						<li class="breadcrumb-item active">User Profile</li>
+					</ol>
+				</div>
+			</div>
+		</div><!-- /.container-fluid -->
+	</section>
+
+	<!-- Main content -->
+	<section class="content">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-3">
+
+					<!-- Profile Image -->
+					<div class="card card-primary card-outline">
+						<div class="card-body box-profile">
+							<div class="text-center">
+
+								{% if profile.profile_pik.url is not None %}
+								<img class="profile-user-img img-fluid img-circle"
+								src="{{profile.profile_pik.url}}"
+								alt="{{profile.user.username}}'s profile"/>
+								{% else %}
+								<img class="profile-user-img img-fluid img-circle"
+								src="{% static 'images/images.jpg' %}"
+								alt="{{profile.user.username}}'s profile"/>
+								{% endif %}
+								<a onclick="changer()" class="border border-secondary p-1 offset-1" style="border-radius: 20px;"><i class="fa fa-edit"></i></a>
+							</div>
+
+							<h3 class="profile-username text-center">{{profile.user.username|capfirst}} {{profile.user.first_name|capfirst}} {{profile.user.last_name|capfirst}}</h3>
+
+							<p class="text-muted text-center">{{profile.role.get_display_text}}</p>
+
+							<ul class="list-group list-group-unbordered mb-3">
+								<li class="list-group-item">
+									<b>Posts</b> <a class="float-right">{{ posts|length }}</a>
+								</li>
+								<li class="list-group-item">
+									<b>Sent notifications</b> <a class="float-right">{{ sent_notifications|length }}</a>
+								</li>
+								<li class="list-group-item">
+									<b>Received notifications</b> <a class="float-right">{{ received_notifications|length }}</a>
+								</li>
+							</ul>
+							<a class="btn btn-warning btn-block text-light"><b><i class="fa fa-star"></i>{{profile.total_stars}} Star{{profile.total_stars|pluralize}}</b></a>
+						</div>
+						<!-- /.card-body -->
+					</div>
+					<!-- /.card -->
+
+					<!-- About Me Box -->
+					<div class="card card-primary">
+						<div class="card-header">
+							<h3 class="card-title">About You</h3>
+						</div>
+						<!-- /.card-header -->
+						<div class="card-body">
+							<strong><i class="fas fa-book mr-1"></i> Experience</strong>
+
+							<p class="text-muted">
+								{% if profile.years_of_experiance >= 0 and profile.role != ""%}
+								{{ profile.years_of_experiance }} year{{profile.years_of_experiance|pluralize}} of being a {{profile.get_role_display|capfirst}}
+								{% else %}
+								You haven't set up your experience yet
+								{% endif %}
+							</p>
+
+							<hr>
+
+							<strong><i class="fas fa-map-marker-alt mr-1"></i> Address</strong>
+
+							<p class="text-muted">
+								{% if profile.address is not None %}
+								{{ profile.address|capfirst }}
+								{% else %}
+								You haven't set up your address yet
+								{% endif %}
+							</p>
+
+							<hr>
+
+							<strong><i class="far fa-file-alt mr-1"></i> Bio</strong>
+							<p class="text-muted">
+								{% if profile.bio != '' %}
+								{{ profile.bio|capfirst }}
+								{% else %}
+								You haven't set up your bio yet
+								{% endif %}
+							</p>
+
+							<hr>
+
+							<strong>
+								<i class="fas fa-phone-alt mr-1"></i> Phone</strong>
+								<p class="text-muted">
+									{% if profile.phone_number is not None %}
+									{{ profile.phone_number|safe }}
+									{% else %}
+									You haven't set up your phone yet
+									{% endif %}
+								</p>
+
+
+								<hr>
+
+								<strong>
+									<i class="fas fa-at mr-1"></i> Email</strong>
+									<p class="text-muted">
+										{% if profile.user.email != '' %}
+										{{ profile.user.email|safe }}
+										{% else %}
+										You haven't set up your phone yet
+										{% endif %}
+									</p>
+								</div>
+								<!-- /.card-body -->
+							</div>
+							<!-- /.card -->
+							<div class="card card-primary">
+								<div class="card-header">
+									<h3 class="card-title">{% if profile.profile_pik.url is not None %}Update{% else %}Upload{% endif %} your profile image</h3>
+								</div>
+								<!-- /.card-header -->
+								<form role="form"
+								method="POST" 
+								enctype="multipart/form-data" 
+								action="{% url 'profile:profile_for' profile.id %}">
+								{% csrf_token %}
+								<div class="card-body" id="image_update" >
+									<div class="form-group">
+										<label for="exampleInputFile">File input</label>
+										<div class="input-group">
+											<div class="custom-file">
+												<input type="file" name="pimage" accept="image/*" class="custom-file-input" id="exampleInputFile">
+												<label class="custom-file-label" for="exampleInputFile">Choose Image</label>
+											</div>
+										</div>
+										<button type="submit" class="btn btn-sm float-right mt-2 btn-success">Upload image</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+
+
+
+
+					<!-- tabs  -->
+
+					<!-- /.col -->
+					<div class="col-md-9">
+						<div class="card">
+							<div class="card-header p-2">
+								<ul class="nav nav-pills">
+									<li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Issues</a></li>
+									<li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Contacts</a></li>
+									<li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Accout settings</a></li>
+								</ul>
+							</div><!-- /.card-header -->
+							<div class="card-body">
+								<div class="tab-content">
+									<div class="active tab-pane" id="activity">
+
+
+										{% for post in posts reversed%}
+										<div class="post border border-primary text-left p-2" style="border-radius: 10px; width: 100%">
+											<div class="user-block">
+												{% if post.posted_by.profile.profile_pik.url is not None %}
+												<img class="img-circle img-bordered-sm" src="{{post.posted_by.profile.profile_pik.url}}" alt="{{post.posted_by.username|capfirst}}">
+												{% else %}
+												<img class="img-circle img-bordered-sm" src="{% static 'images/images.jpg' %}" alt="{{post.posted_by.username|capfirst}}">
+												{% endif %}
+												<span class="username">
+
+													<a href="#">{{ post.posted_by.username|capfirst }} {{ post.posted_by.last_name|capfirst }} {{ post.posted_by.first_name|capfirst }}</a>
+													<br>
+													<a href="#">{{ post.title|capfirst|truncatechars:200 }}</a>
+
+													<div>
+														<a href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="float-right btn-tool"><i class="fas fa-ellipsis-v text-lg p-2"></i></a>
+														<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+															{% if post.posted_by == user %}
+															<a class="dropdown-item btn"><i class="fa fa-edit"></i> Edit</a>
+															<a class="dropdown-item btn" data-url="{% url 'posts:deletepost' %}" onclick="deletePost({{post.id}})"><i class="fas fa-minus-circle"></i> Delete</a>
+															{% endif %}
+															<a class="dropdown-item btn"><i class="fas fa-info-circle"></i> Details</a>
+														</div>
+													</div>
+												</span>
+												<span class="description">{{ post.posted_on|naturaltime }}</span>
+											</div>
+											<!-- /.user-block -->
+											<div>
+												{{ post.body|safe|truncatewords:20|linebreaks }}
+											</div>
+											{% if post.Image %}
+											<img src="{{ post.Image.url }}" width="100%" class="mb-1">
+											{% elif post.video %}
+											<video src="{{ post.video.url }}" controls width="100%"></video>
+											{% else %}
+											{% endif %}
+											<p>
+												<a class="btn bg-dark  text-sm" id="btnLikePost" data-url="{% url 'posts:likeapost' %}"  onclick="likepost({{ post.id }})"  data-id="{{ post.id }}">
+													<i class="far fa-thumbs-up"> Like</i>
+												</a>
+												<span class="mx-2" id="postLikesTop{{ post.id }}"> {{ post.total_likes }} Like{{ post.total_likes|pluralize }}</span>
+												<span class="float-right">
+													<a class="text-sm btn">
+														<i class="far fa-comments mr-1"></i> Comments ({{post.total_comments}})
+													</a>
+												</span>
+											</p>
+
+											<a href="{% url 'posts:single_post' post.id %}" type="button" class="btn  btn-block btn-warning text-light">
+												Join this discussion
+												<i class="fa fa-arrow-right"></i>
+											</a>
+										</div>
+										{% empty %}
+										<div class="text-center">You haven't added a problem yet!!</div>
+										{% endfor %}
+
+									</div>
+
+
+
+									<!-- notifications -->
+									<!-- /.tab-pane -->
+									<div class="tab-pane" id="timeline">
+										<!-- The timeline -->
+										<div class="timeline timeline-inverse">
+											<!-- timeline time label -->
+											<div class="time-label">
+												<span class="bg-secondary">
+													Sent Notifications
+												</span>
+											</div>
+											<!-- /.timeline-label -->
+											<!-- timeline item -->
+											{% for notification in sent_notifications %}
+											<div>
+												<i class="fas fa-envelope bg-primary"></i>
+
+												<div class="timeline-item">
+													<span class="time">
+														<i class="far fa-clock"></i> 
+														{{ notification.sent_on|naturaltime }}
+													</span>
+
+													<h3 class="timeline-header"><a class="text-primary">You</a> sent a notification to {{ notification.to.user.username|capfirst }}</h3>
+
+													<div class="timeline-body">
+														{{ notification.body|capfirst|linebreaks }}
+													</div>
+													<div class="timeline-footer">
+														<a href="{% url 'doctor:read_notification' notification.id %}" class="btn btn-primary btn-sm">View thread</a>
+													</div>
+												</div>
+											</div>
+											{% empty %}
+											<div>
+												<i class="fas fa-envelope bg-primary"></i>
+
+												<div class="timeline-item">
+													You haven't sent any notification
+													<span class="time">
+														<i class="far fa-empty"></i> 
+													</span>
+												</div>
+											</div>
+											{% endfor %}
+
+
+
+
+
+											<div class="time-label">
+												<span class="bg-success">
+													Received notification
+												</span>
+											</div>
+											<!-- /.timeline-label -->
+											<!-- timeline item -->
+											<!-- todo! -->
+
+
+											{% for notification in received_notifications %}
+											<div>
+												<i class="fas fa-inbox bg-primary"></i>
+
+												<div class="timeline-item">
+													<span class="time">
+														<i class="far fa-clock"></i> 
+														{{ notification.sent_on|naturaltime }}
+													</span>
+													<h3 class="timeline-header"><a class="text-primary">{{ notification.fro.user.username|capfirst }}</a> sent you a notification.</h3>
+
+
+													<div class="timeline-body">
+														{{ notification.body|capfirst|linebreaks }}
+													</div>
+													<div class="timeline-footer">
+														<a href="{% url 'doctor:read_notification' notification.id %}" class="btn btn-primary btn-sm">View thread</a>
+													</div>
+												</div>
+											</div>
+											{% empty %}
+											<div>
+												<i class="fas fa-inbox bg-primary"></i>
+
+												<div class="timeline-item">
+													You haven't received any notifications
+													<span class="time">
+														<i class="far fa-empty"></i> 
+													</span>
+												</div>
+											</div>
+											{% endfor %}
+										</div>
+									</div>
+									<!-- /.tab-pane -->
+
+
+									<!-- update profiles -->
+									<div class="tab-pane" id="settings">
+										<h4 class="text-left text-success">Update basic profile <span class="error0 text-light"></span></h4>
+										<!-- role address bio years_of_experiance phone_number -->
+										<form class="form-horizontal" id="resetbasic" action="{% url 'profile:profile_for' profile.id %}">
+											<!-- select -->
+											{% csrf_token %}
+											<input type="hidden" name="update_basic" value="true">
+											<div class="form-group row">
+												<div class="col-sm-6">
+													<div class="form-group">
+														{{profile.get_role_display}} {{profile.role }}
+														<label>What do you do?</label>
+														<select class="custom-select" id="role" name="role">
+															{% if profile.role != '' %} 
+															<option value="{{ profile.role }}" selected>Current is: {{profile.get_role_display }}</option>
+															<div class="divider"></div>
+															{% endif %}
+															<option value="fr">Farmer</option>
+															<option value="dr">Doctor</option>
+														</select>
+													</div>
+												</div>
+												<div class="col-sm-6">
+													<div class="form-group">
+														<label>Address</label>
+														<input type="text" {% if profile.address%}value="{{ profile.address }}"{% endif %} class="form-control" id="address" placeholder="Address" name="address">
+													</div>
+												</div>
+											</div>
+
+
+											<div class="form-group row">
+												<div class="col-sm-6">
+													<div class="form-group">
+														<label>For how long have you been in operation(years)</label>
+														<input type="number" {% if profile.years_of_experiance%}value="{{ profile.years_of_experiance }}"{% endif %} class="form-control" id="years_of_experiance" placeholder="1" name="years_of_experiance">
+													</div>
+												</div>
+												<div class="col-sm-6">
+													<div class="form-group">
+														<label>Phone number</label>
+														<input type="tel" {% if profile.phone_number%} value="{{ profile.phone_number }}" {% endif %} class="form-control" id="phone_number" placeholder="Phone number" name="phone_number">
+													</div>
+												</div>
+											</div>
+											<div class="form-group row">
+												<div class="offset-sm-12 col-sm-12">
+													<label>Short bio about you</label>
+													<input type="text" style="resize: none;" name="bio" id="bio" placeholder="Enter something..." value="{% if profile.bio != '' %} {{ profile.bio|capfirst }} {% endif %} " class="form-control" cols="10"/>
+													
+												</div>
+											</div>
+
+											<div class="form-group row">
+												<div class="col-12">
+													<button type="submit" class="btn btn-block btn-warning text-light">Update now </button>
+												</div>
+											</div>
+										</form>
+
+
+										<h4 class="text-left text-success">Advanced profile <span class="error1 text-light"></span></h4>
+										<!-- role address bio years_of_experiance phone_number -->
+										<form class="form-horizontal" id="resetadvanced" action="{% url 'profile:profile_for' profile.id %}">
+											<!-- select -->
+											{% csrf_token %}
+											<input type="hidden" name="update_advanced" value="true">
+											<div class="form-group row">
+												<div class="col-sm-6">
+													<div class="form-group">
+														<label>First name</label>
+														<input type="text" {% if profile.user.first_name%}value="{{ profile.user.first_name }}"{% endif %} class="form-control" id="first_name" placeholder="First name" name="first_name">
+													</div>
+												</div>
+												<div class="col-sm-6">
+													<div class="form-group">
+														<label>Last name</label>
+														<input type="text" {% if profile.user.first_name%}value="{{ profile.user.last_name }}"{% endif %} class="form-control" id="last_name" placeholder="Last name" name="last_name">
+													</div>
+												</div>
+											</div>
+
+
+											<div class="form-group row">
+												<div class="col-sm-6">
+													<div class="form-group">
+														<label>Username</label>
+														<input type="text" {% if profile.user.username %}value="{{ profile.user.username|capfirst }}"{% endif %} class="form-control" id="username" placeholder="Username" name="username">
+													</div>
+												</div>
+												<div class="col-sm-6">
+													<div class="form-group">
+														<label>Email</label>
+														<input type="email" {% if profile.user.email %}value="{{ profile.user.email }}"{% endif %} class="form-control" id="email" placeholder="Email" name="email">
+													</div>
+												</div>
+											</div>
+											<div class="form-group row">
+												<div class="col-12">
+													<button type="submit" class="btn btn-block btn-warning text-light" id="changead">Update now</button>
+												</div>
+											</div>
+										</form>
+
+
+
+
+
+										<h4 class="text-left text-danger">Danger zone</h4>
+										<h6 class="text-left text-danger">Change password <span class="error text-light"></span></h6>
+										
+										<!-- role address bio years_of_experiance phone_number -->
+										<form class="form-horizontal" data-logout= "{% url 'posts:logout' %}" id="resetPasswordForm" action="{% url 'profile:profile_for' profile.id %}">
+											<!-- select -->
+											{% csrf_token %}
+											<input type="hidden" name="updating_password" value="true">
+											<div class="form-group row">
+												<div class="col-sm-6">
+													<div class="form-group">
+														<label>Old password</label>
+														<input type="password" class="form-control" id="password1" placeholder="Old password" name="password1">
+													</div>
+												</div>
+												<div class="col-sm-6">
+													<div class="form-group">
+														<label>New password</label>
+														<input type="password" class="form-control" id="password2" placeholder="Old password" name="password2">
+													</div>
+												</div>
+											</div>
+											<div class="form-group row">
+												<div class="col-12">
+													<button type="submit" class="btn btn-block btn-warning text-light" id="changepd">Change password now</button>
+												</div>
+											</div>
+										</form>
+
+										<hr/>
+										<h5 class="text-left text-danger mt-5">Terminate Account</h5>
+										<p>Please you are reminded that taking the following action permanntly leads to deletion of all data about you. And the process is irreversible.</p>
+										<div class="form-group row">
+											<div class="col-12">
+												<button type="button" id="deactivareAcc" data-action="{% url 'profile:profile_for' profile.id %}" class="btn btn-block btn-danger text-light">Terminate account now</button>
+											</div>
+										</div>
+									</div>
+									<!-- /.tab-pane -->
+								</div>
+								<!-- /.tab-content -->
+							</div><!-- /.card-body -->
+						</div>
+						<!-- /.nav-tabs-custom -->
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+			</div><!-- /.container-fluid -->
+		</section>
+		<!-- /.content -->
+	</section>
+
+	{% endblock content %}
+
+	{% block script %}
+
+	<script>
+		function changer(){
+			// history.pushState("", "", '#image_update')
+			// $(document).scrollTo('#image_update')
+			location.href="#image_update"
+			// $('#image_update').
+		}
+		$('#resetbasic').on('submit', function(e){
+			e.preventDefault()
+			let myurl = $(this).attr('action')
+			let bio = $('#bio').val()
+			let years_of_experiance = $('#years_of_experiance').val()
+			let phone_number = $('#phone_number').val()
+			let address = $('#address').val()
+			let role = $('#role').val()
+			if(bio == "" || years_of_experiance < 1 || phone_number == "" || address == "" || role == ""){
+				$('.error0').addClass("alert alert-warning").text("Some fields are still empty")
+			}else if(phone_number.length < 10 || phone_number.length > 10){
+				$('.error0').addClass("alert alert-warning").text("Your phone number can only be ten characters")
+			}else if(years_of_experiance < 0){
+				$('.error0').addClass("alert alert-warning").text("The least level of experiance is 1 year.")
+			}else{
+				$('.error').removeClass("alert alert-warning").addClass("d-none")
+				let mydata = $('#resetbasic').serialize()
+				$.ajax({
+					data: mydata,
+					url: myurl,
+					type: 'POST',
+					dataType : 'json',
+					success:function (response) {
+						if (response.code){
+							$('.error0').addClass("alert alert-success").removeClass("d-none alert-danger").text(response.message)
+						}else{
+							$('.error0').addClass("alert alert-danger").removeClass("d-none alert-success").text(response.message)
+						}
+					},
+				})
+			}
+		})
+
+
+		$('#resetPasswordForm').on('submit', function(e){
+			e.preventDefault()
+			let myurl = $(this).attr('action')
+			let password1 = $('#password1').val()
+			let password2 = $('#password2').val()
+			if(password1 == ""){
+				$('.error').addClass("alert alert-warning").text("You old password is still empty")
+			}else if(password2 == ""){
+				$('.error').addClass("alert alert-warning").text("You new password is still empty")
+			}else if(password2.length < 8){
+				$('.error').addClass("alert alert-warning").text("You new password is still weak")
+			}else{
+				$('.error').removeClass("alert alert-warning").addClass("d-none")
+				let mydata = $('#resetPasswordForm').serialize()
+				$.ajax({
+					data: mydata,
+					url: myurl,
+					type: 'POST',
+					dataType : 'json',
+					beforesend: function(){
+						$('#changepd').text('Please wait...')
+					},
+					success:function (response) {
+						if (response.code){
+							$('.error').addClass("alert alert-success").removeClass("d-none alert-danger").text(response.message)
+							window.location.href = $('#resetPasswordForm').data('logout')
+						}else{
+							$('.error').addClass("alert alert-danger").removeClass("d-none alert-success").text(response.message)
+						}
+					},
+					completed: function(){
+						$('#changepd').text('Change password now')
+						$('#resetPasswordForm').trigger('reset')
+					}
+				})
+			}
+		})
+
+		$('#deactivareAcc').on('click', function(){
+			let qtn = confirm("Are you sure you want to do this?")
+			let url1 =  $('#deactivareAcc').data('action')
+			if (qtn != false){
+				$.ajax({
+					url: url1,
+					data: {
+						'flag': true,
+					},
+					type: 'GET',
+					dataType: 'json',
+					success: function(resp){
+						if (resp.code) {
+							// alert("Please wait while we log you out!")
+							window.location.href = $("#resetPasswordForm").data('logout')
+						}
+					}
+				})
+			}
+		})
+
+		$('#resetadvanced').on('submit', function(e){
+			e.preventDefault()
+			let myurl = $(this).attr('action')
+			let first_name = $('#first_name').val()
+			let last_name = $('#last_name').val()
+			let username = $('#username').val()
+			let email = $('#email').val()
+			if(last_name == "" || first_name == "" || username == "" || email == ""){
+				$('.error1').addClass("alert alert-warning").text("Some fields are still empty!").removeClass('d-none')
+				setTimeout(function() {
+					$('.error1').fadeOut('slow').addClass("d-none alert-warning")
+				}, 4000)
+			}else if(username.length < 3){
+				$('.error1').addClass("alert alert-warning").text("Your username should be atleast 3 characters").removeClass('d-none')
+				setTimeout(function() {
+					$('.error1').fadeOut('slow').addClass("d-none alert-warning")
+				}, 4000)
+			}else{
+				$('.error1').removeClass("alert alert-warning").addClass("d-none")
+				let mydata = $('#resetadvanced').serialize()
+				$.ajax({
+					data: mydata,
+					url: myurl,
+					type: 'POST',
+					dataType : 'json',
+					beforesend: function(){
+						$('#changead').text('Please wait...')
+					},
+					success:function (response) {
+						if (response.code){
+							$('.error1').fadeIn('slow').removeClass("d-none alert-danger").addClass("alert alert-success").text(response.message)
+							setTimeout(function() {
+								$('.error1').fadeOut('slow').addClass("d-none").removeClass('alert alert-success')
+							}, 4000)
+
+						}else{
+							$('.error1').removeClass("d-none alert-success").addClass("alert alert-danger").text(response.message)
+							setTimeout(function() {
+								$('.error1').fadeOut('slow').addClass("d-none")
+							}, 4000)
+						}
+					},
+					completed: function(){
+						$('#changead').text('Update now')
+					}
+				})
+			}
+		})
+
+	</script>
+	{% endblock script %}

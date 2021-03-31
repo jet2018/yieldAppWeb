@@ -1,0 +1,426 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block content %}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<div class="container-fluid">
+		<div class="row mb-2">
+			<div class="col-sm-6">
+				<h1>Your notifications</h1>
+			</div>
+			<div class="col-sm-6">
+				<ol class="breadcrumb float-sm-right">
+					<li class="breadcrumb-item"><a href="{% url 'posts:index' %}">Home</a></li>
+					<li class="breadcrumb-item active">Notifications</li>
+				</ol>
+			</div>
+		</div>
+	</div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+	<div class="row">
+		<div class="col-md-3">
+			<a href="{% url 'doctor:compose'%}" class="btn btn-primary btn-block mb-3">Compose</a>
+
+			<div class="card">
+				<div class="card-header">
+					<h3 class="card-title">Menu</h3>
+
+					<div class="card-tools">
+						<button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+						</button>
+					</div>
+				</div>
+				<div class="card-body p-0">
+					<ul class="nav nav-pills flex-column">
+						<li class="nav-item active">
+							<a type="button" onclick="SwitchToInbox()"  class="nav-link">
+								<i class="fas fa-inbox"></i> Inbox
+								<span class="badge bg-primary float-right" id="inboxcouut">{{ received|length}}</span>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a type="button" onclick="SwitchToSent()" class="nav-link">
+								<i class="far fa-envelope"></i> Sent
+								<span class="badge bg-primary float-right" id="sentcouut">{{ sent|length }}</span>
+							</a>
+						</li>
+						<li class="nav-item active">
+							<a type="button" onclick="SwitchToUnread()"  class="nav-link">
+								<i class="fas fa-check-circle"></i> Unread
+								<span class="badge bg-primary float-right" id="unreadcouut">{{ unread|length}}</span>
+							</a>
+						</li>
+					</ul>
+				</div>
+				<!-- /.card-body -->
+			</div>
+		</div>
+		<!-- /.col -->
+		<div class="col-md-9">
+			<div class="card card-primary card-outline" id="inbox">
+				<div class="card-header">
+					<h3 class="card-title">Inbox</h3>
+
+					<!-- <div class="card-tools">
+						<div class="input-group input-group-sm">
+							<input type="text" class="form-control" placeholder="Search Mail">
+							<div class="input-group-append">
+								<div class="btn btn-primary">
+									<i class="fas fa-search"></i>
+								</div>
+							</div>
+						</div>
+					</div> -->
+					<!-- /.card-tools -->
+				</div>
+				<!-- /.card-header -->
+				<div class="card-body p-0">
+					<div class="mailbox-controls">
+						<!-- Check all button -->
+                <!-- <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="far fa-square"></i>
+                </button> -->
+                <div class="btn-group">
+                	<button type="button" class="btn btn-default btn-sm">All: <span id="inboxcouut">{{ received|length }}</span></button>
+                </div>
+                <!-- /.btn-group -->
+                <button type="button" class="btn btn-default btn-sm"><i class="fas fa-sync-alt"></i></button>
+                <div class="float-right">
+                	
+                	<div class="btn-group">
+                		{% if unread.count > 0 %}
+                		<button type="button" onclick="MarkAllAsRead()" class="btn btn-default btn-sm"><i class="fas fa-check-circle"></i> Mark all as read
+                		</button>
+                		{% else %}
+                		<button type="button" class="btn btn-default btn-sm"><i class="fas fa-thumbs-up"></i> All read
+                		</button>
+                		{% endif %}
+                		
+                	</div>
+                	<!-- /.btn-group -->
+                </div>
+                <!-- /.float-right -->
+            </div>
+            <div class="table-responsive mailbox-messages">
+
+            	<table class="table table-hover table-striped">
+            		<tbody>
+            			{% for notification in received reversed %}
+            			<tr id="row{{ notification.id }}">
+            				<td>
+            					<a type="button" onclick="deletePost({{notification.id}})" class="icheck-primary ">
+            						<i class="fas fa-trash"></i>
+            					</a>
+            				</td>
+            				{% if notification.status is True %}
+            				<td class="mailbox-star">
+            				<a>
+            					<i class="fas fa-check-circle text-success"></i>
+            				</a>
+            				</td>
+            				{% else %}
+            				<td class="mailbox-star">
+            				<a type="button" id="line_{{notification.id}}" onclick="MarkOneAsRead({{notification.id}})">
+            					<i class="fas fa-check-circle text-muted "></i>
+            				</a>
+            				</td>
+            				{% endif %}
+
+            				<td class="mailbox-name">
+            					<a href="#">{{ notification.fro.user.first_name|capfirst }} {{ notification.fro.user.last_name|capfirst }} {{ notification.fro.user.username|capfirst }}</a></td>
+            				<td class="mailbox-subject">{{ notification.body|safe|capfirst|truncatechars:45 }}
+            				</td>
+            				<td class="mailbox-attachment"></td>
+            				<td class="mailbox-date">{{ notification.sent_on|naturaltime}}</td>
+            				<td class="mailbox-date"><a href="{% url 'doctor:read_notification' notification.id %}" class="bg-primary px-2 py-1 fas fa-eye" style="border-radius: 1px;"></a></td>
+            			</tr>
+            			{% empty %}
+            			<h4 class="text-center">You have not received any notifications yet!</h4>
+            			{% endfor %}
+            			</tbody>
+            		</table>
+            		<!-- /.table -->
+            	</div>
+            	<!-- /.mail-box-messages -->
+            </div>
+            <!-- /.card-body -->
+        </div>
+
+
+
+
+
+<!-- sent -->
+        <div class="card card-primary card-outline d-none" id="sent">
+				<div class="card-header">
+					<h3 class="card-title">Sent</h3>
+
+					<!-- <div class="card-tools">
+						<div class="input-group input-group-sm">
+							<input type="text" class="form-control" placeholder="Search Mail">
+							<div class="input-group-append">
+								<div class="btn btn-primary">
+									<i class="fas fa-search"></i>
+								</div>
+							</div>
+						</div>
+					</div> -->
+					<!-- /.card-tools -->
+				</div>
+				<!-- /.card-header -->
+				<div class="card-body p-0">
+					<div class="mailbox-controls">
+						<!-- Check all button -->
+                <!-- <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="far fa-square"></i>
+                </button> -->
+                <div class="btn-group">
+                	<button type="button" class="btn btn-default btn-sm">All: <span id="sentcouut">{{ sent|length }}</span></button>
+                </div>
+                <!-- /.btn-group -->
+                <button type="button" class="btn btn-default btn-sm"><i class="fas fa-sync-alt"></i></button>
+               <!--  <div class="float-right">
+                	
+                	<div class="btn-group">
+                		<button type="button" class="btn btn-default btn-sm"><i class="fas fa-check-circle"></i> Mark all as read</button>
+                		
+                	</div>
+                	 /.btn-group 
+                </div> -->
+                <!-- /.float-right -->
+            </div>
+            <div class="table-responsive mailbox-messages">
+
+            	<table class="table table-hover table-striped">
+            		<tbody>
+            			{% for notification in sent reversed %}
+            			<tr id="row{{ notification.id }}">
+            				<td>
+            					<a type="button" onclick="deletePost2({{notification.id}})" class="icheck-primary ">
+            						<i class="fas fa-trash"></i>
+            					</a>
+            				</td>
+            				{% if notification.status is True %}
+            				<td class="mailbox-star">
+            				
+            					<i class="fas fa-check-circle text-success"></i>
+            				
+            				</td>
+            				{% else %}
+            				<td class="mailbox-star">
+            				
+            					<i class="fas fa-check-circle text-muted "></i>
+            				
+            				</td>
+            				{% endif %}
+
+            				<td class="mailbox-name">
+            					<a href="#">{{ notification.fro.user.first_name|capfirst }} {{ notification.fro.user.last_name|capfirst }} {{ notification.fro.user.username|capfirst }}</a></td>
+            				<td class="mailbox-subject">{{ notification.body|safe|capfirst|truncatechars:45 }}
+            				</td>
+            				<td class="mailbox-attachment"></td>
+            				<td class="mailbox-date">{{ notification.sent_on|naturaltime}}</td>
+            				<td class="mailbox-date"><a href="{% url 'doctor:read_notification' notification.id %}" class="bg-primary px-2 py-1 fas fa-eye" style="border-radius: 1px;"></a></td>
+            			</tr>
+            			{% empty %}
+            			<h4 class="text-center">You have not sent any notification yet</h4>
+            			{% endfor %}
+            			</tbody>
+            		</table>
+            		<!-- /.table -->
+            	</div>
+            	<!-- /.mail-box-messages -->
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+
+
+
+
+        <!-- unread -->
+        <div class="card card-primary card-outline d-none" id="unread">
+				<div class="card-header">
+					<h3 class="card-title">Unread</h3>
+
+					<!-- <div class="card-tools">
+						<div class="input-group input-group-sm">
+							<input type="text" class="form-control" placeholder="Search Mail">
+							<div class="input-group-append">
+								<div class="btn btn-primary">
+									<i class="fas fa-search"></i>
+								</div>
+							</div>
+						</div>
+					</div> -->
+					<!-- /.card-tools -->
+				</div>
+				<!-- /.card-header -->
+				<div class="card-body p-0">
+					<div class="mailbox-controls">
+						<!-- Check all button -->
+                <!-- <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="far fa-square"></i>
+                </button> -->
+                <div class="btn-group">
+                	<button type="button" class="btn btn-default btn-sm">All: <span id="unreadcouut">{{ unread|length }}</span></button>
+                </div>
+                <!-- /.btn-group -->
+                <button type="button" class="btn btn-default btn-sm"><i class="fas fa-sync-alt"></i></button>
+                <div class="float-right">
+                	
+                	<div class="btn-group">
+                		{% if unread.count > 0 %}
+                		<button type="button" onclick="MarkAllAsRead()" class="btn btn-default btn-sm"><i class="fas fa-check-circle"></i> Mark all as read
+                		</button>
+                		{% else %}
+                		<button type="button" class="btn btn-default btn-sm"><i class="fas fa-thumbs-up"></i> All read
+                		</button>
+                		{% endif %}
+                		
+                	</div>
+                	<!-- /.btn-group -->
+                </div>
+                <!-- /.float-right -->
+            </div>
+            <div class="table-responsive mailbox-messages">
+
+            	<table class="table table-hover table-striped">
+            		<tbody>
+            			{% for notification in unread reversed %}
+            			<tr  id="_{{notification.id}}">
+            				<td>
+            					<a type="button" onclick="deletePost({{notification.id}})" class="icheck-primary ">
+            						<i class="fas fa-trash"></i>
+            					</a>
+            				</td>
+            				{% if notification.status is True %}
+            				<td class="mailbox-star">
+            				<a>
+            					<i class="fas fa-check-circle text-success"></i>
+            				</a>
+            				</td>
+            				{% else %}
+            				<td class="mailbox-star">
+            				<a type="button" onclick="MarkOneAsRead({{notification.id}})">
+            					<i class="fas fa-check-circle text-muted "></i>
+            				</a>
+            				</td>
+            				{% endif %}
+
+            				<td class="mailbox-name">
+            					<a href="#">{{ notification.fro.user.first_name|capfirst }} {{ notification.fro.user.last_name|capfirst }} {{ notification.fro.user.username|capfirst }}</a></td>
+            				<td class="mailbox-subject">{{ notification.body|safe|capfirst|truncatechars:45 }}
+            				</td>
+            				<td class="mailbox-attachment"></td>
+            				<td class="mailbox-date">{{ notification.sent_on|naturaltime}}</td>
+            				<td class="mailbox-date"><a href="{% url 'doctor:read_notification' notification.id %}" class="bg-primary px-2 py-1 fas fa-eye" style="border-radius: 1px;"></a></td>
+            			</tr>
+            			{% empty %}
+            			<h4 class="text-center">No unread notifications</h4>
+            			{% endfor %}
+            			</tbody>
+            		</table>
+            		<!-- /.table -->
+            	</div>
+            	<!-- /.mail-box-messages -->
+            </div>
+            <!-- /.card-body -->
+        </div>
+    </div>
+    <!-- /.col -->
+</div>
+<!-- /.row -->
+</section>
+<!-- /.content -->
+{% endblock content %}
+
+{% block script %}
+
+<script type="text/javascript">
+	function SwitchToInbox() {
+		$('#sent').fadeOut('slow').addClass('d-none')
+		$('#unread').fadeOut('slow').addClass('d-none')
+		$('#inbox').fadeIn('slow').removeClass('d-none')
+	}
+
+	function SwitchToUnread() {
+		$('#sent').fadeOut('slow').addClass('d-none')
+		$('#unread').fadeIn('slow').removeClass('d-none')
+		$('#inbox').fadeOut('slow').addClass('d-none')
+	}
+
+	function SwitchToSent() {
+		$('#sent').fadeIn('slow').removeClass('d-none')
+		$('#unread').fadeOut('slow').addClass('d-none')
+		$('#inbox').fadeOut('slow').addClass('d-none')
+	}
+
+	function MarkAllAsRead() {
+	    $.ajax({
+	      url: '/doctors/mark_as_read/',
+	      data: {
+	        'unread':true
+	      },
+	      type: 'GET',
+	      dataType: 'json',
+	      success: function(res){
+	      	if (res.code) {
+	      		window.location.href == location.href
+	      	}
+	      }
+	    })
+  }
+
+
+  function deletePost(id) {
+	    $.ajax({
+	      url: '/doctors/delete_notification/',
+	      data: {
+	        'id':id
+	      },
+	      type: 'GET',
+	      dataType: 'json',
+	      success: function(res){
+	      	if (res.code) {
+	      		$('#row'+id).fadeOut('slow').remove()
+	      	}
+	      }
+	    })
+  }
+
+  function MarkOneAsRead(id) {
+	    $.ajax({
+	      url: '/doctors/mark_one_as_read/',
+	      data: {
+	        'id':id
+	      },
+	      type: 'GET',
+	      dataType: 'json',
+	      success: function(res){
+	      	if (res.code) {
+	      		$('#_'+id).fadeOut('slow').remove()
+	      		$('#line_'+id).html('<i class="fas fa-check-circle text-success"></i>')
+	      	}
+	      }
+	    })
+  }
+
+  function deletePost2(id) {
+	    $.ajax({
+	      url: '/doctors/delete_notification_sent/',
+	      data: {
+	        'id':id
+	      },
+	      type: 'GET',
+	      dataType: 'json',
+	      success: function(res){
+	      	if (res.code) {
+	      		$('#row'+id).fadeOut('slow').remove()
+	      	}
+	      }
+	    })
+  }
+</script>
+{% endblock script %}

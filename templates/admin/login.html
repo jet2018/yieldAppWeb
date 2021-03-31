@@ -1,0 +1,30 @@
+{% extends "admin/login.html" %}
+
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+body, #header{
+  background-color: transparent !important;
+}
+#container{
+	border: none !important;
+}
+</style>
+{% endblock %}
+
+{% block branding %}
+<img src="{% static 'images/icon.png' %}" alt="YieldUp" class="brand-image img-circle elevation-3"
+          >
+<h1>
+  
+  <small>{% block head_title %}{% endblock %}</small>
+</h1>
+{% endblock %}
+
+{% block content_title %}
+<p class="lead" style="font-size: 20px; color: #dbb027; text-align: center;">
+Welcome to the administrators section, login to proceed
+</p>
+{% endblock %}

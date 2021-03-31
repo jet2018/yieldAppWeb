@@ -1,0 +1,135 @@
+ {% extends 'base.html' %}
+
+{% block content %}
+ <!-- Main content -->
+<!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Compose a notification</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{% url 'posts:index' %}">Home</a></li>
+              <li class="breadcrumb-item active">Compose</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-3">
+            <a href="{% url 'doctor:all_notifications' %}" class="btn btn-primary btn-block mb-3">Back to Inbox</a>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Menu</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card-body p-0">
+                <ul class="nav nav-pills flex-column">
+                 <li class="nav-item active">
+              <a type="button" onclick="alert('Switch to inbox to proceed')" class="nav-link">
+                <i class="fas fa-inbox"></i> Inbox
+                <span class="badge bg-primary float-right" id="inboxcouut">{{ received|length}}</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a type="button" onclick="alert('Switch to inbox to proceed')" class="nav-link">
+                <i class="far fa-envelope"></i> Sent
+                <span class="badge bg-primary float-right" id="sentcouut">{{ sent|length }}</span>
+              </a>
+            </li>
+            <li class="nav-item active">
+              <a type="button" onclick="alert('Switch to inbox to proceed')" class="nav-link">
+                <i class="fas fa-check-circle"></i> Unread
+                <span class="badge bg-primary float-right" id="unreadcouut">{{ unread|length}}</span>
+              </a>
+            </li>
+                </ul>
+              </div>
+              <!-- /.card-body -->
+            </div>
+           
+          </div>
+          <!-- /.col -->
+          <div class="col-md-9" id="Compose">
+            <div class="card card-primary card-outline">
+              <div class="card-header">
+                <h3 class="card-title">Compose New Message <span id="error" class=""></span></h3>
+              </div>
+              <!-- /.card-header -->
+              <form action="{% url 'doctor:compose' %}" id="composeForm">
+                {% csrf_token %}
+              <div class="card-body">
+                <div class="form-group">
+                  <input class="form-control" type="email" required name="email" id="email" placeholder="To:(someone@somedomain.etc)">
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" required name="body" style="height: 200px; resize: none;">
+                    </textarea>
+                </div>
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer">
+                <div class="float-right">
+                  <button type="reset" class="btn btn-default"><i class="fas fa-pencil-alt"></i> Cancel</button>
+                  <button type="submit" class="btn btn-primary"><i class="far fa-envelope"></i> Send</button>
+                </div>
+              </div>
+              </form>
+              <!-- /.card-footer -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+    {% endblock content %}
+{% block script %}
+<script type="text/javascript">
+$('#composeForm').on('submit', function (e) {
+  e.preventDefault()
+
+  let url = $(this).attr('action')
+  let mydata = $(this).serialize()
+  if ($('#email').val == '') {
+   alert("Email address cannot be empty!")
+   $('#email').focus()
+  }else{
+    $.ajax({
+      url:url,
+      data:mydata,
+      type: 'post',
+      dataType: 'json',
+      success: function (res) {
+        if (res.code) {
+          $('#error').text(res.message).addClass('bg-success px-3 text-light')
+          setTimeout(function(){
+            $('#error').text('').removeClass('bg-success px-3  text-light')
+          }, 5000)
+         $('#composeForm').trigger('reset')
+        }else{
+           $('#error').text(res.message).addClass('bg-danger px-3 text-light')
+          setTimeout(function(){
+            $('#error').text('').removeClass('bg-danger px-3  text-light')
+          }, 5000)
+        }
+      }
+    })
+  }
+})
+</script>
+{% endblock script %}
