@@ -8,7 +8,7 @@
 		<center>
 			<h2 class="text-center text-primary" style="width: 100%">Create a post</h2>
 			<!-- upload a post -->
-			<form class="text-left border border-primary p-3" id="postform" style="border-radius: 10px; width: 70%" method="POST" enctype="multipart/form-data" action="{% url 'posts:addpost' %}" />
+			<form class="text-left border border-primary p-3" id="postform" style="border-radius: 10px; width: 90%" method="POST" enctype="multipart/form-data" action="{% url 'posts:addpost' %}" />
 			{% csrf_token %}
 			<div>
 				<div>
@@ -50,11 +50,11 @@
 		</form>
 
 
-		<a style="width: 70%" class="btn mt-3 btn-flat fixed btn-block mb-1 btn-circle btn-primary" href="{% url 'posts:index' %}">Refresh for new
+		<a style="width: 90%" class="btn mt-3 btn-flat fixed btn-block mb-1 btn-circle btn-primary" href="{% url 'posts:index' %}">Refresh for new
 		posts</a>
 		<!-- <h4 class="text-primary text-left mr-5">Farmer's newsfeed</h4> -->
 		{% for post in posts reversed%}
-		<div class="post border border-primary text-left p-2" id="post{{post.id}}" style="border-radius: 10px; width: 70%">
+		<div class="post border border-primary text-left p-2" id="post{{post.id}}" style="border-radius: 10px; width: 90%">
 			<div class="user-block">
 				{% if post.posted_by.profile.profile_pik.url is not None %}
 				<img class="img-circle img-bordered-sm" src="{{post.posted_by.profile.profile_pik.url}}" alt="{{post.posted_by.username|capfirst}}">
