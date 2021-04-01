@@ -1,0 +1,3 @@
+0 BeanRust
+1 AngularLeafSpot
+2 HealthyLeaf

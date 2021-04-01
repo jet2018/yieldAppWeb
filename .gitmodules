@@ -1,0 +1,3 @@
+[submodule "YieldUp_Mobile"]
+	path = YieldUp_Mobile
+	url = https://github.com/probuse/YieldUp.git

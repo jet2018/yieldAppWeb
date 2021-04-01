@@ -12,7 +12,7 @@
         <div class="card col-md-3 bg-dark text-muted">
          <div class="p-1">
           <h6 class="text-muted font-weight-bold p-2">Your recent test results.</h6>
-          <h6 ><span class="font-weight-bold">Type:</span> {{resp.type_of_test|capfirst}}</h6>
+          <h6 ><span class="font-weight-bold">Type:</span> {{resp.get_type_of_test_display|capfirst}}</h6>
           <hr>
           <h6><span class="font-weight-bold">Results:</span> {{resp.predicate_disease|capfirst}}</h6>
           <hr>
@@ -21,7 +21,7 @@
          </div>
          {% endif %}
               <div class="{% if resp %} col-md-9 {% else %} ml-md-1 col-md-12 {% endif %}">
-                  <div class="text-right text-lg text-muted p-2">Your history tests</div>
+                  <div class="text-left text-lg text-muted p-2 ">Your history tests</div>
                 <div class="row">
 
       	{% for sample in all_tests %}
