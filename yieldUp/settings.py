@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '!#mffgwsme15zp&h7@e%s$1gv_fe82*zn04np31gpa8a1u9ipw'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -49,7 +49,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -83,17 +83,17 @@ WSGI_APPLICATION = 'yieldUp.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'yieldapp',
-#         'USER': 'root',
-#         'PASSWORD': 'peacebewithyouall2020',
-#         # 'HOST': 'yieldup:us-central1:yieldapp',
-#         'HOST': 'localhost',
-#         'PORT': '3306'
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'yieldapp',
+        'USER': 'root',
+        'PASSWORD': 'peacebewithyouall2020',
+        # 'HOST': 'yieldup:us-central1:yieldapp',
+        'HOST': 'localhost',
+        'PORT': '3306'
+    }
+}
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -106,12 +106,12 @@ WSGI_APPLICATION = 'yieldUp.wsgi.application'
 #     }
 # }
 # we only need the engine name, as heroku takes care of the rest
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-    }
-}
 # DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql_psycopg2",
+#     }
+# }
+# # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
 #         'NAME': BASE_DIR / 'db.sqlite3',
@@ -166,7 +166,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 STATIC_ROOT = os.path.join(BASE_DIR, "live-static", "static-root")
@@ -197,18 +197,18 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "live-static", "media-root")
 
 
 # Allow all host hosts/domain names for this site
-ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = ['*']
 
-# # # Parse database configuration from $DATABASE_URL
-import dj_database_url
+# # # # Parse database configuration from $DATABASE_URL
+# import dj_database_url
 
-DATABASES = { 'default' : dj_database_url.config()}
+# DATABASES = { 'default' : dj_database_url.config()}
 
-# # # Honor the 'X-Forwarded-Proto' header for request.is_secure()
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# # # # Honor the 'X-Forwarded-Proto' header for request.is_secure()
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-# # # try to load local_settings.py if it exists
-try:
-  from local_settings import *
-except Exception as e:
-  pass
+# # # # try to load local_settings.py if it exists
+# try:
+#   from local_settings import *
+# except Exception as e:
+#   pass
