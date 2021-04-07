@@ -95,17 +95,17 @@ WSGI_APPLICATION = 'yieldUp.wsgi.application'
 # }
 
 # for python annywhere
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'yieldapp$default',
-        'USER': 'yieldapp',
-        'PASSWORD': 'peacebewithyouall2020',
-        # 'HOST': 'yieldup:us-central1:yieldapp',
-        'HOST': 'yieldapp.mysql.pythonanywhere-services.com',
-        'PORT': '3306'
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'yieldapp$default',
+#         'USER': 'yieldapp',
+#         'PASSWORD': 'peacebewithyouall2020',
+#         # 'HOST': 'yieldup:us-central1:yieldapp',
+#         'HOST': 'yieldapp.mysql.pythonanywhere-services.com',
+#         'PORT': '3306'
+#     }
+# }
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -118,11 +118,11 @@ DATABASES = {
 #     }
 # }
 # we only need the engine name, as heroku takes care of the rest
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql_psycopg2",
-#     }
-# }
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+    }
+}
 # # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
