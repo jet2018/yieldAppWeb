@@ -9,7 +9,7 @@ class DiagoniseView(TemplateView):
 	template_name = 'diagnosis/index.html'
 
 @login_required(login_url = '/login/')
-def cropUpload(request, crop_type):
+def resultsPage(request, crop_type):
 	# form = DiagnosisImageForm()
 	return render(request, 'diagnosis/fileUpload.html', {"crop":crop_type})
 

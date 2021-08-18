@@ -8,10 +8,9 @@
         <div class="card-body login-card-body">
             <p class="login-box-msg">You forgot your password? Here you can easily retrieve a new password.</p>
 
-            <form id="ignite_reset" method="post" action="{% url 'profile:reset_password_with_token' %}">
-                {% csrf_token %}
+            <form action="{% url 'posts:forgot' %}" method="post">
                 <div class="input-group mb-3">
-                    <input type="email" name="email" class="form-control" placeholder="Email">
+                    <input type="email" class="form-control" placeholder="Email">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-envelope"></span>
@@ -20,7 +19,7 @@
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <button type="submit" class="btn btn-warning btn-block" id="btn_submit">Request new password</button>
+                        <button type="submit" class="btn btn-warning btn-block">Request new password</button>
                     </div>
                     <!-- /.col -->
                 </div>
@@ -36,23 +35,4 @@
         <!-- /.login-card-body -->
     </div>
 </div>
-{% endblock content %} {% block script %}
-<script>
-    $('#ignite_reset').on("submit", function(e) {
-        e.preventDefault()
-        data = $(this).serialize()
-        url = $(this).attr("action")
-        $("#btn_submit").text("Requesting, please wait...").addClass("bg-primary")
-        $.ajax({
-            url: url,
-            data: data,
-            type: 'POST',
-            success: function(res) {
-                console.log(res)
-            }
-
-        })
-
-    })
-</script>
-{% endblock script %}
+{% endblock content %}

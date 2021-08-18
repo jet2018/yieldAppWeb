@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 from django.contrib.auth.models import User
 from django.dispatch import receiver
@@ -34,14 +35,36 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
 
-# comment this on first migrations
 
+# comment this on first migrations
+now = datetime.datetime.now()
+expire_after_30 = now + datetime.timedelta(minutes=30.0)
+code = str(int(datetime.datetime.timestamp(now)))
+# 1629184190
+# 1629184202
+
+
+class GenerateCodes(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    token = models.CharField(
+        unique=True, max_length=100, default=code)
+    generated_on = models.DateTimeField(auto_now=True)
+    expires_on = models.DateTimeField(default=expire_after_30)
+    reason = models.CharField(max_length=100, null=True, blank=True)
 
 # signals
+
+
 @receiver(post_save, sender=User)
 def create_profile(sender, **kwargs):
     if kwargs['created']:
         user_profile = Profile.objects.create(user=kwargs['instance'])
+
+
+@receiver(pre_save, sender=GenerateCodes)
+def BeforeCreateResetPasswordToken(sender, instance=None, **kwargs):
+    # token =
+    pass
 
 
 @receiver(post_delete, sender=Profile)
