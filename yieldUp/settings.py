@@ -13,7 +13,19 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import dj_database_url
 from pathlib import Path
 import os
+from datetime import timedelta
+import dj_database_url
+from pathlib import Path
+import os
+import environ
+import yieldUp.storage_backends
+# Initialise environment variables
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
 
+environ.Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -22,10 +34,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '!#mffgwsme15zp&h7@e%s$1gv_fe82*zn04np31gpa8a1u9ipw'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = env('DEBUG')
+
 
 ALLOWED_HOSTS = []
 
@@ -43,6 +56,7 @@ INSTALLED_APPS = [
     'diagnosis',
     'posts',
     'doctor',
+    'storages',
     'profiler',
     'django.contrib.humanize',
     'widget_tweaks',
@@ -203,6 +217,42 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "live-static", "media-root")
 # EMAIL_PORT = 587
 # EMAIL_USE_TLS = True
 # DEFAULT_FROM_EMAIL = 'default-email'
+
+
+if not DEBUG:
+    STATICFILES_DIRS = (
+        os.path.join(BASE_DIR, "static"),
+    )
+    AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
+    AWS_S3_CUSTOM_DOMAIN = env('AWS_S3_CUSTOM_DOMAIN')
+    AWS_DEFAULT_ACL = 'public-read'
+    AWS_S3_OBJECT_PARAMETERS = {
+        'CacheControl': 'max-age=86400',
+    }
+
+    AWS_LOCATION = 'static'
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+
+    DEFAULT_FILE_STORAGE = env('DEFAULT_FILE_STORAGE')
+    # Allow all host hosts/domain names for this site
+    ALLOWED_HOSTS = ['*']
+
+    # # # Parse database configuration from $DATABASE_URL
+
+    DATABASES = {'default': dj_database_url.config()}
+
+    # # # Honor the 'X-Forwarded-Proto' header for request.is_secure()
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# # # try to load local_settings.py if it exists
+if DEBUG:
+    try:
+        from .local_settings import *
+    except Exception as e:
+        pass
 
 
 # Allow all host hosts/domain names for this site
