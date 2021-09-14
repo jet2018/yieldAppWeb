@@ -11,12 +11,9 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 import dj_database_url
-from pathlib import Path
 import os
 from datetime import timedelta
-import dj_database_url
 from pathlib import Path
-import os
 import environ
 import yieldUp.storage_backends
 # Initialise environment variables
@@ -270,3 +267,7 @@ try:
     from .local_settings import *
 except Exception as e:
     pass
+
+
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
