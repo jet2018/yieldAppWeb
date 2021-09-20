@@ -21,10 +21,6 @@ The Mobile Application
 
 Demo link for the Web App: [http://yieldupp.herokuapp.com](http://yieldupp.herokuapp.com)
 
-Link to [Mobile App](https://drive.google.com/drive/folders/1N1c2BDYwqR9UhPV8GEdZr3M-W9oMwFB)
-
-Link to [Test Images](https://drive.google.com/drive/folders/1QdRsCyld1YE5dyLp9DUEHpTwfwWOBTA5).
-
 ## Contributing
 Pull requests are welcome. Do not hesitate to fix any wrong data. But please open an issue first to discuss what you would like to change.
 
