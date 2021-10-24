@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import JsonResponse
+from django.http import JsonResponse, response
 from django.views.generic import TemplateView, DetailView
 
 from diagnosis.models import Diagnosis

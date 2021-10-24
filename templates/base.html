@@ -174,83 +174,45 @@
         </aside>
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper container">
-            <div class="row">
-                <div class="col-md-8">{% block content %} {% endblock content %}</div>
-                <div class="col-md-4 ">
-                    <div class="card bg-none mt-5" style="background-image: url({% static 'images/maploc.jpg' %}); background-size:cover; background-repeat:no-repeat;">
-                        <h5 class="font-weight-bold pl-2">#Weather</h5>
-                        <div class="ml-1">
-                            <h6 class="text-primary font-weight-bold"><i class="fa fa-map-marker  text-right"> </i>&nbsp;Current location </h6>
-                            <div class="text-left font-weight-bold text-primary">
-                                <strong> Lat: </strong><span id="lat" class=""></span>&nbsp; &nbsp; &nbsp;
-                                <strong> Long: </strong><span id="long" class=""></span>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="card bg-none mt-1">
-                        <div class="card-title">
-                            <h5 class="font-weight-bold pl-2"> #Recent user tests</h5>
-                            {% for test in tests reversed %}
-                            <div class="post   text-left p-2" id="post{{post.id}}" style="border-radius: 10px; width: 90%">
-                                <div class="user-block">
-                                    {% if test.farmer.profile.profile_pik.url is not None %}
-                                    <img class="img-circle img-bordered-sm" src="{{test.farmer.profile.profile_pik.url}}" alt="{{test.farmer.username|capfirst}}"> {% else %}
-                                    <img class="img-circle img-bordered-sm" src="{% static 'images/images.jpg' %}" alt="{{test.farmer.username|capfirst}}"> {% endif %}
-                                    <span class="username">
-                      
-                                      {% if test.farmer == user %} You {% else %} <a href="#">{{ test.farmer.username|capfirst }} {{ test.farmer.last_name|capfirst }} {{ test.farmer.first_name|capfirst }}</a>{% endif %}
-                                      <br>
-                                        <a href="#">Test on {{ test.get_type_of_test_display }} resulted {{test.predicate_disease}} </a>
-                                    </span>
-                                    <span class="description">{{ test.tested_on|naturaltime }}</span>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-
-
-                </div>
-            </div>
-
-            <!-- Main Footer -->
-            <footer class="main-footer">
-                <strong>Copyright &copy; {% now "M Y"%} <a class="text-primary">YieldUp</a>.</strong> All rights reserved.
-                <div class="float-right d-none d-sm-inline-block">
-                    <b>Plant and produce</b>
-                </div>
-            </footer>
+            {% block content %} {% endblock content %}
         </div>
 
-        <!-- REQUIRED SCRIPTS -->
-        <!-- jQuery -->
-        <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
-        <!-- Bootstrap -->
-        <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-        <!-- overlayScrollbars -->
-        <script src="{% static 'plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js' %}"></script>
-        <script src="{% static 'plugins/summernote/summernote-bs4.min.js' %}"></script>
+        <!-- Main Footer -->
+        <footer class="main-footer">
+            <strong>Copyright &copy; {% now "M Y"%} <a class="text-primary">YieldUp</a>.</strong> All rights reserved.
+            <div class="float-right d-none d-sm-inline-block">
+                <b>Plant and produce</b>
+            </div>
+        </footer>
+    </div>
 
-        <!-- AdminLTE App -->
-        <script src="{% static 'dist/js/adminlte.js' %}"></script>
+    <!-- REQUIRED SCRIPTS -->
+    <!-- jQuery -->
+    <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+    <!-- Bootstrap -->
+    <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <!-- overlayScrollbars -->
+    <script src="{% static 'plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js' %}"></script>
+    <script src="{% static 'plugins/summernote/summernote-bs4.min.js' %}"></script>
 
-        <!-- OPTIONAL SCRIPTS -->
-        <script src="{% static 'dist/js/demo.js' %}"></script>
+    <!-- AdminLTE App -->
+    <script src="{% static 'dist/js/adminlte.js' %}"></script>
 
-        <!-- PAGE PLUGINS -->
-        <!-- jQuery Mapael -->
-        <script src="{% static 'plugins/jquery-mousewheel/jquery.mousewheel.js' %}"></script>
-        <script src="{% static 'plugins/jquery-mapael/jquery.mapael.min.js' %}"></script>
-        <script src="{% static 'plugins/jquery-mapael/maps/usa_states.min.js' %}"></script>
-        <!-- ChartJS -->
-        <script src="{% static 'plugins/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script>
+    <!-- OPTIONAL SCRIPTS -->
+    <script src="{% static 'dist/js/demo.js' %}"></script>
 
-        <script src="{% static 'plugins/chart.js/Chart.min.js' %}"></script>
+    <!-- PAGE PLUGINS -->
+    <!-- jQuery Mapael -->
+    <script src="{% static 'plugins/jquery-mousewheel/jquery.mousewheel.js' %}"></script>
+    <script src="{% static 'plugins/jquery-mapael/jquery.mapael.min.js' %}"></script>
+    <script src="{% static 'plugins/jquery-mapael/maps/usa_states.min.js' %}"></script>
+    <!-- ChartJS -->
+    <script src="{% static 'plugins/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script>
 
-        <!-- PAGE SCRIPTS -->
-        <script src="{% static 'dist/js/pages/dashboard2.js' %}"></script>
+    <script src="{% static 'plugins/chart.js/Chart.min.js' %}"></script>
+
+    <!-- PAGE SCRIPTS -->
+    <script src="{% static 'dist/js/pages/dashboard2.js' %}"></script>
 </body>
 
 </html>
@@ -319,6 +281,11 @@
         })
     }, 10000)
 
+    setInterval(function() {
+        GetWeatherForecast()
+        fetchAlerts()
+    }, 6000000)
+
 
     function likepost(id) {
         url1 = $('#btnLikePost').data('url')
@@ -354,12 +321,65 @@
             $("#long").addClass("d-none")
             $("#demo").html("Geolocation is not supported by this browser.")
         }
+        alert($("#lat").text())
     }
-    getCurrent()
 
     function showPosition(position) {
         $("#lat").text(position.coords.latitude)
         $("#long").text(position.coords.longitude)
     }
+
+
+    function fetchAlerts() {
+        let lat = $("#lat").text()
+        let long = $("#long").text()
+        let key = "d05d406df1934de889338bb13f1f6430"
+        let url = `https://api.weatherbit.io/v2.0/alerts?lat=${lat}&lon=${long}&key=${key}`
+
+        $.ajax({
+            url: url,
+            type: 'get',
+            success: function(res) {
+                if (res.alerts.length > 0) {
+                    res.alerts.forEach(al => {
+                        $("#alerts").html(`< div class = "alert border m-1" style = "border-radius: 10px;" >${al.title} </div>`)
+                    });
+                } else {
+                    $("#alerts").html("<div class='alert border m-1' style='border-radius: 10 px;'>No alerts found for your region! </div >")
+                }
+            }
+        })
+
+    }
+
+
+
+    function GetWeatherForecast() {
+        // return weather forecast per hour
+        let lat = $("#lat").text()
+        let long = $("#long").text()
+        alert(lat)
+        let key = "d05d406df1934de889338bb13f1f6430"
+        let url = `https://api.weatherbit.io/v2.0/forecast/minutely?lat=${lat}&lon=${long}&key=${key}`
+
+        $.ajax({
+            url: url,
+            type: 'get',
+            success: function(res) {
+                let curdate = new Date()
+                let mins = curdate.getTime() / 1000
+
+                let current = res.data.filter(el => {
+                    return el.ts == mins
+                });
+
+
+            }
+        })
+
+    }
+    getCurrent()
+    fetchAlerts()
+    GetWeatherForecast()
 </script>
 {% block script %} {% endblock script %}

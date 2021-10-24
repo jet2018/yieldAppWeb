@@ -110,12 +110,12 @@
 
 
 
-            <div class="col-lg-3 col-md-5 col-sm-12 offset-1 px-2 card h-100 w-100 layout-fixed hold-transition ">
+            <div style="background-color: #f4f6f9; border:#f4f6f9;" class="col-lg-4 col-md-5 col-sm-12 offset-0 card h-100 layout-fixed hold-transition">
                 <h5 class="text-info text-center py-2"> <i class="fas fa-info-circle text-primary"></i> About {% if post.posted_by == user %} you {% else %} {% if post.posted_by.profile.role is not None %} this {{post.posted_by.profile.get_role_display|capfirst}}-{% endif %}{{post.posted_by.username|capfirst}}'
                     {% endif %}</h5>
                 {% if post.posted_by.profile.profile_pik.url is not None %}
-                <img class="img-circle img-bordered-sm" src="{{post.posted_by.profile.profile_pik.url}}" alt="{{post.posted_by.username|capfirst}}"> {% else %}
-                <img class="img-circle img-bordered-sm" src="{% static 'images/images.jpg' %}" alt="{{post.posted_by.username|capfirst}}"> {% endif %}
+                <img class="img-circle img-bordered-sm img-lg mx-auto" src="{{post.posted_by.profile.profile_pik.url}}" alt="{{post.posted_by.username|capfirst}}"> {% else %}
+                <img class="img-circle img-bordered-sm img-lg mx-auto" src="{% static 'images/images.jpg' %}" alt="{{post.posted_by.username|capfirst}}"> {% endif %}
 
                 <ul class="list-group list-group-unbordered my-3">
                     <li class="list-group-item">

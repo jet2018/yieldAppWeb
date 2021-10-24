@@ -21,87 +21,88 @@
 </style>
 <!-- form for uploading a post -->
 <section class="content-header">
-    <div class="container-fluid">
-        <center>
-            <h2 class="text-left ml-4 pl-2 text-primary" id="messanger" style="width: 100%">Create a post</h2>
-            <!-- upload a post -->
-            <form class="text-left border border-primary p-3" id="postform" style="border-radius: 10px; width: 90%" method="POST" enctype="multipart/form-data" action="{% url 'posts:addpost' %}" />
-            <div>{% csrf_token %}</div>
-            <div>
+    <div class="container-fluid row">
+        <div class="col-md-8">
+            <center>
+                <h2 class="text-left ml-4 pl-2 text-primary" id="messanger" style="width: 100%">Create a post</h2>
+                <!-- upload a post -->
+                <form class="text-left border border-primary p-3" id="postform" style="border-radius: 10px; width: 90%" method="POST" enctype="multipart/form-data" action="{% url 'posts:addpost' %}" />
+                <div>{% csrf_token %}</div>
                 <div>
-                    <label class="">Post title</label>
-                    <input required type="text" maxlength="254" name="title" class="form-control" placeholder="Post title">
-                </div>
-                <div>
-                    <label>Post body</label>
-                    <textarea class="form-control" name="body" style="resize: none;" id="inputExperience" placeholder="What's on your mind, {{ user.username|capfirst }}?"></textarea>
-                </div>
+                    <div>
+                        <label class="">Post title</label>
+                        <input required type="text" maxlength="254" name="title" class="form-control" placeholder="Post title">
+                    </div>
+                    <div>
+                        <label>Post body</label>
+                        <textarea class="form-control" name="body" style="resize: none;" id="inputExperience" placeholder="What's on your mind, {{ user.username|capfirst }}?"></textarea>
+                    </div>
 
-                <span class="text-muted"><i class="fas fa-info-circle text-primary"></i> You can add an image or video not both</span>
-                <div class="row mt-1">
-                    <div class="input-group col-md-6 col-sm-12 col-xs-12 col-lg-6">
-                        <i class="fas  border p-2  fa-cloud-upload-alt text-muted" onclick="ImageTrigger()" style="cursor: pointer;"> Attach image</i>
-                        <div class="custom-file d-none">
-                            <input type="file" onchange="previewFile(this);" accept="image/*" hidden class="custom-file-input" name="image" id="exampleInputImage">
+                    <span class="text-muted"><i class="fas fa-info-circle text-primary"></i> You can add an image or video not both</span>
+                    <div class="row mt-1">
+                        <div class="input-group col-md-6 col-sm-12 col-xs-12 col-lg-6">
+                            <i class="fas  border p-2  fa-cloud-upload-alt text-muted" onclick="ImageTrigger()" style="cursor: pointer;"> Attach image</i>
+                            <div class="custom-file d-none">
+                                <input type="file" onchange="previewFile(this);" accept="image/*" hidden class="custom-file-input" name="image" id="exampleInputImage">
 
-                            <label class="custom-file-label" for="exampleInputImage">Add Image</label>
+                                <label class="custom-file-label" for="exampleInputImage">Add Image</label>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="input-group col-md-6 col-sm-12 col-xs-12 col-lg-6 mt-sm-1 mt-xs-1">
-                        <i class="fas border p-2 fa-cloud-upload-alt text-muted" onclick="VideoTrigger()" style="cursor: pointer;"> Attach Video</i>
-                        <div class="custom-file d-none">
-                            <input type="file" accept="video/*" onchange="readVideo(this)" class="custom-file-input" name="video" id="exampleInputVideo">
-                            <label class="custom-file-label" for="exampleInputVideo">Add Video</label>
+                        <div class="input-group col-md-6 col-sm-12 col-xs-12 col-lg-6 mt-sm-1 mt-xs-1">
+                            <i class="fas border p-2 fa-cloud-upload-alt text-muted" onclick="VideoTrigger()" style="cursor: pointer;"> Attach Video</i>
+                            <div class="custom-file d-none">
+                                <input type="file" accept="video/*" onchange="readVideo(this)" class="custom-file-input" name="video" id="exampleInputVideo">
+                                <label class="custom-file-label" for="exampleInputVideo">Add Video</label>
+                            </div>
                         </div>
-                    </div>
-                    <!-- <button type="button" onclick="clearfields()" class="btn ml-2 mt-1 btn-sm btn-danger">Clear file fields</button> -->
-                </div>
-
-
-                <div class="row">
-                    <div class="col-md-6 ">
-                        <img id="previewImg" width="50%" height="auto" class="img-wrap ml-4 mt-4 d-none" src="..." alt="Image Upload" />
-                        <i class="fas fa-times-circle d-none text-lg" style="cursor: pointer;" id="clear"></i>
+                        <!-- <button type="button" onclick="clearfields()" class="btn ml-2 mt-1 btn-sm btn-danger">Clear file fields</button> -->
                     </div>
 
-                    <div class="col-md-6">
-                        <i class="fas fa-times-circle d-none text-lg" style="cursor: pointer;" id="clear2"></i>
-                        <video width="50%" class="myvideo img-wrap d-none ml-4 mt-4">
+
+                    <div class="row">
+                        <div class="col-md-6 ">
+                            <img id="previewImg" width="50%" height="auto" class="img-wrap ml-4 mt-4 d-none" src="..." alt="Image Upload" />
+                            <i class="fas fa-times-circle d-none text-lg" style="cursor: pointer;" id="clear"></i>
+                        </div>
+
+                        <div class="col-md-6">
+                            <i class="fas fa-times-circle d-none text-lg" style="cursor: pointer;" id="clear2"></i>
+                            <video width="50%" class="myvideo img-wrap d-none ml-4 mt-4">
 						<source src="..." id="video_here">
 							Your browser does not support HTML5 video.
             			</video>
+                        </div>
+
                     </div>
 
+                    <div class="row mt-3">
+                        <div class="input-group col-md-3 col-sm-12 col-xs-12 col-lg-3 ">
+                            <button type="reset" class="btn btn-block bg-light btn-file">Cancel Upload </button>
+                        </div>
+                        <div class="input-group  offset-lg-3 offset-md-3 col-md-6 col-sm-12 mt-sm-2 mt-xs-2 col-xs-12 col-lg-6">
+                            <button type="submit" class="btn btn-block bg-info btn-file">Upload post</button>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="row mt-3">
-                    <div class="input-group col-md-3 col-sm-12 col-xs-12 col-lg-3 ">
-                        <button type="reset" class="btn btn-block bg-light btn-file">Cancel Upload </button>
-                    </div>
-                    <div class="input-group  offset-lg-3 offset-md-3 col-md-6 col-sm-12 mt-sm-2 mt-xs-2 col-xs-12 col-lg-6">
-                        <button type="submit" class="btn btn-block bg-info btn-file">Upload post</button>
-                    </div>
-                </div>
-            </div>
-            </form>
+                </form>
 
 
 
-            <a style="width: 90%" class="btn mt-3 btn-flat text-light fixed btn-block mb-1 btn-circle btn-primary d-none" id="refreshBtn">Refresh for new
+                <a style="width: 90%" class="btn mt-3 btn-flat text-light fixed btn-block mb-1 btn-circle btn-primary d-none" id="refreshBtn">Refresh for new
 		posts</a>
-            <hr class="w-100">
-            <!-- <h4 class="text-primary text-left mr-5">Farmer's newsfeed</h4> -->
-            <div id="newPosts"></div>
+                <hr class="w-100">
+                <!-- <h4 class="text-primary text-left mr-5">Farmer's newsfeed</h4> -->
+                <div id="newPosts"></div>
 
-            <div id="oldPosts">
-                {% for post in posts reversed %}
-                <div class="post border border-primary text-left p-2" id="post{{post.id}}" style="border-radius: 10px; width: 90%">
-                    <div class="user-block">
-                        {% if post.posted_by.profile.profile_pik.url is not None %}
-                        <img class="img-circle img-bordered-sm" src="{{post.posted_by.profile.profile_pik.url}}" alt="{{post.posted_by.username|capfirst}}"> {% else %}
-                        <img class="img-circle img-bordered-sm" src="{% static 'images/images.jpg' %}" alt="{{post.posted_by.username|capfirst}}"> {% endif %}
-                        <span class="username">
+                <div id="oldPosts">
+                    {% for post in posts reversed %}
+                    <div class="post border border-primary text-left p-2" id="post{{post.id}}" style="border-radius: 10px; width: 90%">
+                        <div class="user-block">
+                            {% if post.posted_by.profile.profile_pik.url is not None %}
+                            <img class="img-circle img-bordered-sm" src="{{post.posted_by.profile.profile_pik.url}}" alt="{{post.posted_by.username|capfirst}}"> {% else %}
+                            <img class="img-circle img-bordered-sm" src="{% static 'images/images.jpg' %}" alt="{{post.posted_by.username|capfirst}}"> {% endif %}
+                            <span class="username">
 
 					{% if post.posted_by == user %} You {% else %} <a href="#">{{ post.posted_by.username|capfirst }} {{ post.posted_by.last_name|capfirst }} {{ post.posted_by.first_name|capfirst }}</a>{% endif %}
 					<br>
@@ -117,36 +118,88 @@
 						</div>
 					</div>
 				</span>
-                        <span class="description">{{ post.posted_on|naturaltime }}</span>
-                    </div>
-                    <!-- /.user-block -->
-                    <div>
-                        {{ post.body|safe|truncatewords:20|linebreaks }}
-                    </div>
-                    {% if post.Image %}
-                    <img src="{{ post.Image.url }}" width="100%" class="mb-1"> {% elif post.video %}
-                    <video src="{{ post.video.url }}" controls width="100%"></video> {% else %} {% endif %}
-                    <p>
-                        <a class="btn bg-dark  text-sm" id="btnLikePost" data-url="{% url 'posts:likeapost' %}" onclick="likepost({{ post.id }})" data-id="{{ post.id }}">
-                            <i class="far fa-thumbs-up"> Like</i>
-                        </a>
-                        <span class="mx-2" id="postLikesTop{{ post.id }}"> {{ post.total_likes }} Like{{ post.total_likes|pluralize }}</span>
-                        <span class="float-right">
+                            <span class="description">{{ post.posted_on|naturaltime }}</span>
+                        </div>
+                        <!-- /.user-block -->
+                        <div>
+                            {{ post.body|safe|truncatewords:20|linebreaks }}
+                        </div>
+                        {% if post.Image %}
+                        <img src="{{ post.Image.url }}" width="100%" class="mb-1"> {% elif post.video %}
+                        <video src="{{ post.video.url }}" controls width="100%"></video> {% else %} {% endif %}
+                        <p>
+                            <a class="btn bg-dark  text-sm" id="btnLikePost" data-url="{% url 'posts:likeapost' %}" onclick="likepost({{ post.id }})" data-id="{{ post.id }}">
+                                <i class="far fa-thumbs-up"> Like</i>
+                            </a>
+                            <span class="mx-2" id="postLikesTop{{ post.id }}"> {{ post.total_likes }} Like{{ post.total_likes|pluralize }}</span>
+                            <span class="float-right">
 					<a class="text-sm btn">
 						<i class="far fa-comments mr-1"></i> Comments ({{post.total_comments}})
 					</a>
 				</span>
-                    </p>
+                        </p>
 
-                    <a href="{% url 'posts:single_post' post.slug %}" type="button" class="btn  btn-block bg-gradient-gray-dark text-fuchsia">
+                        <a href="{% url 'posts:single_post' post.slug %}" type="button" class="btn  btn-block bg-gradient-gray-dark text-fuchsia">
 				Join this discussion
 				<i class="fa fa-arrow-right"></i>
 				</a>
-                    </form>
+                        </form>
+                    </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
+            </center>
+        </div>
+
+
+
+        <div class="col-md-4 ">
+
+
+            <div class="card bg-none mt-5" style="background-image: url({% static 'images/backpik.jpeg' %}); background-size:cover; background-repeat:no-repeat;">
+                <h5 class="font-weight-bold text-light pl-2">#Weather alerts</h5>
+                <div class="mx-1 text-light">
+                    <h6 class="text-primary font-weight-bold"><i class="fa fa-map-marker  text-right"> </i>&nbsp;Current location </h6>
+                    <div class="text-left font-weight-bold text-primary">
+                        <strong> Lat: </strong><span id="lat" class=""></span>&nbsp; &nbsp; &nbsp;
+                        <div class="float-right"><strong class=""> Long: </strong><span id="long" class=""></span></div>
+                    </div>
+                    <div id="alerts">
+                    </div>
+                </div>
             </div>
-        </center>
+
+            <div class="card bg-none mt-1" style="background-image: url({% static 'images/backpik.jpeg' %}); background-size:cover; background-repeat:no-repeat;">
+                <h5 class="font-weight-bold text-light pl-2">#Weather forecast</h5>
+                <div class="mx-1 text-light">
+                    <strong>Precipitation: </strong>
+                    <strong>Snow: </strong>
+                </div>
+            </div>
+
+            <div class="card border border-info mt-1" style="border: solid;">
+                <div class="card-title">
+                    <h5 class="font-weight-bold pl-2"> #Recent user tests</h5>
+                    {% for test in tests reversed %}
+                    <div class="post   text-left p-2" id="post{{post.id}}" style="border-radius: 10px; width: 90%">
+                        <div class="user-block">
+                            {% if test.farmer.profile.profile_pik.url is not None %}
+                            <img class="img-circle img-bordered-sm" src="{{test.farmer.profile.profile_pik.url}}" alt="{{test.farmer.username|capfirst}}"> {% else %}
+                            <img class="img-circle img-bordered-sm" src="{% static 'images/images.jpg' %}" alt="{{test.farmer.username|capfirst}}"> {% endif %}
+                            <span class="username">
+                      
+                                      {% if test.farmer == user %} You {% else %} <a href="#">{{ test.farmer.username|capfirst }} {{ test.farmer.last_name|capfirst }} {{ test.farmer.first_name|capfirst }}</a>{% endif %}
+                                      <br>
+                                        <a href="#">Test on {{ test.get_type_of_test_display }} resulted {{test.predicate_disease}} </a>
+                                    </span>
+                            <span class="description">{{ test.tested_on|naturaltime }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+
+        </div>
     </div>
 
 
