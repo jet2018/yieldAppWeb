@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from django.views.generic import TemplateView, DetailView
+
+from diagnosis.models import Diagnosis
 from .models import Post, postComment, Commentreply
 from django.contrib.auth.models import User, auth
 from django.contrib.auth.decorators import login_required
@@ -10,7 +12,8 @@ from django.contrib.auth.decorators import login_required
 def index(request):
     if request.user.is_authenticated:
         myposts = Post.objects.all()
-        return render(request, 'posts/all_posts.html', {'posts': myposts})
+        topTests = Diagnosis.objects.all().order_by("?")[:4]
+        return render(request, 'posts/all_posts.html', {'posts': myposts, "tests": topTests})
     else:
         return render(request, 'auths/index.html')
 
