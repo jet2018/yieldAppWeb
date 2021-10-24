@@ -8,7 +8,7 @@ TEMPLATE_DEBUG = True
 DATABASES = {
     'default': {
         'ENGINE': env('DB_ENGINE'),
-        'NAME':env('DB_NAME'),
+        'NAME': env('DB_NAME'),
         'USER': env('DB_USER'),
         'PASSWORD': env('DB_PASS'),
         'HOST': '127.0.0.1',
