@@ -178,12 +178,7 @@
         </div>
 
         <!-- Main Footer -->
-        <footer class="main-footer">
-            <strong>Copyright &copy; {% now "M Y"%} <a class="text-primary">YieldUp</a>.</strong> All rights reserved.
-            <div class="float-right d-none d-sm-inline-block">
-                <b>Plant and produce</b>
-            </div>
-        </footer>
+
     </div>
 
     <!-- REQUIRED SCRIPTS -->
@@ -220,7 +215,6 @@
 <script>
     $(document).ready(function() {
         bsCustomFileInput.init();
-
         let user = $('#main_wrapper').data('id')
         let url = $('#main_wrapper').data('url')
         $.ajax({
@@ -256,6 +250,10 @@
         }
     })
 
+    $(document).ready(function() {
+        fetchAlerts()
+        GetWeatherForecast()
+    })
 
 
     setInterval(function() {
@@ -311,7 +309,8 @@
         });
     }
 
-
+    var lat = null
+    var long = null
 
     function getCurrent() {
         if (navigator.geolocation) {
@@ -321,18 +320,18 @@
             $("#long").addClass("d-none")
             $("#demo").html("Geolocation is not supported by this browser.")
         }
-        alert($("#lat").text())
     }
 
     function showPosition(position) {
         $("#lat").text(position.coords.latitude)
         $("#long").text(position.coords.longitude)
+        lat = position.coords.latitude
+        long = position.coords.longitude
     }
 
 
     function fetchAlerts() {
-        let lat = $("#lat").text()
-        let long = $("#long").text()
+        getCurrent()
         let key = "d05d406df1934de889338bb13f1f6430"
         let url = `https://api.weatherbit.io/v2.0/alerts?lat=${lat}&lon=${long}&key=${key}`
 
@@ -355,10 +354,7 @@
 
 
     function GetWeatherForecast() {
-        // return weather forecast per hour
-        let lat = $("#lat").text()
-        let long = $("#long").text()
-        alert(lat)
+        getCurrent()
         let key = "d05d406df1934de889338bb13f1f6430"
         let url = `https://api.weatherbit.io/v2.0/forecast/minutely?lat=${lat}&lon=${long}&key=${key}`
 
@@ -366,20 +362,14 @@
             url: url,
             type: 'get',
             success: function(res) {
-                let curdate = new Date()
-                let mins = curdate.getTime() / 1000
-
-                let current = res.data.filter(el => {
-                    return el.ts == mins
-                });
-
-
+                let last_item = res.data[res.data.length - 1]
+                $("#snow").text(last_item.precip)
+                $("#precip").text(last_item.snow)
             }
         })
 
     }
+
     getCurrent()
-    fetchAlerts()
-    GetWeatherForecast()
 </script>
 {% block script %} {% endblock script %}

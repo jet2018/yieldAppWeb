@@ -13,7 +13,8 @@ def index(request):
     if request.user.is_authenticated:
         myposts = Post.objects.all()
         topTests = Diagnosis.objects.all().order_by("?")[:4]
-        return render(request, 'posts/all_posts.html', {'posts': myposts, "tests": topTests})
+        topPosts = Post.objects.all().order_by("?")[:4]
+        return render(request, 'posts/all_posts.html', {'posts': myposts, "tests": topTests, "top_posts": topPosts})
     else:
         return render(request, 'auths/index.html')
 
