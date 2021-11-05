@@ -87,6 +87,7 @@ TEMPLATES = [
     },
 ]
 
+W_API_KEY = env("WEATHER_API_KEY")
 WSGI_APPLICATION = 'yieldUp.wsgi.application'
 
 # Password validation
@@ -190,8 +191,6 @@ else:
         from .local_settings import *
     except Exception as e:
         pass
-    
-
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

@@ -250,10 +250,10 @@
         }
     })
 
-    $(document).ready(function() {
-        fetchAlerts()
-        GetWeatherForecast()
-    })
+    // $(document).ready(function() {
+    //     fetchAlerts()
+    //     GetWeatherForecast()
+    // })
 
 
     setInterval(function() {
@@ -279,10 +279,10 @@
         })
     }, 10000)
 
-    setInterval(function() {
-        GetWeatherForecast()
-        fetchAlerts()
-    }, 6000000)
+    // setInterval(function() {
+    //     GetWeatherForecast()
+    //     fetchAlerts()
+    // }, 6000000)
 
 
     function likepost(id) {
@@ -309,67 +309,74 @@
         });
     }
 
-    var lat = null
-    var long = null
 
-    function getCurrent() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition);
-        } else {
-            $("#lat").addClass("d-none")
-            $("#long").addClass("d-none")
-            $("#demo").html("Geolocation is not supported by this browser.")
-        }
-    }
-
-    function showPosition(position) {
-        $("#lat").text(position.coords.latitude)
-        $("#long").text(position.coords.longitude)
-        lat = position.coords.latitude
-        long = position.coords.longitude
-    }
-
-
-    function fetchAlerts() {
-        getCurrent()
-        let key = "d05d406df1934de889338bb13f1f6430"
-        let url = `https://api.weatherbit.io/v2.0/alerts?lat=${lat}&lon=${long}&key=${key}`
-
+    function getWeatherForecast(lat, long) {
         $.ajax({
-            url: url,
+            url: `https://api.weatherapi.com/v1/forecast.json?key=a533261a909449ba8ac200546210411&q=${lat}, ${long}&days=2&aqi=no&alerts=no`,
             type: 'get',
             success: function(res) {
-                if (res.alerts.length > 0) {
-                    res.alerts.forEach(al => {
-                        $("#alerts").html(`< div class = "alert border m-1" style = "border-radius: 10px;" >${al.title} </div>`)
-                    });
-                } else {
-                    $("#alerts").html("<div class='alert border m-1' style='border-radius: 10 px;'>No alerts found for your region! </div >")
-                }
+                var loc_html = `<div class="offset-0">
+                    <div class="row">
+                        <div class="col-7 text-info">
+                            <h6 class="text-light">Name: ${res.location.name}</h6>
+                            <h6 class="text-light">Region: ${res.location.region}</h6>
+                            <h6 class="text-light">Country: ${res.location.country}</h6>
+                            <h6 class="text-light">Lat: ${res.location.lat}</h6>
+                            <h6 class="text-light">Long: ${res.location.lon}</h6>
+                            <h6 class="text-light">Timezone: ${res.location.tz_id}</h6>
+                        </div>
+                        <div class="col-5">
+                            <img src="${res.current.condition.icon}" alt="">
+                            <h6 class="text-light">${res.current.condition.text}</h6>
+                            <h6 class="text-light">${res.current.temp_c}&deg;C(Temp)</h6>
+                            <h6 class="text-light">${res.current.wind_kph} kph(Wind speed)</h6>
+                        </div>
+                    </div>
+                </div>`
+                $(".location").html(loc_html)
+                res.forecast.forecastday.forEach(element => {
+                    var forecast_html = `<div class="offset-0">
+                    <div class="row">
+                        <div class="col-7 text-info">
+                            <h6 class="text-light">Date: ${element.date}</h6>
+                            <h6 class="text-light">Max Temp: ${element.day.maxtemp_c}&deg;C</h6>
+                            <h6 class="text-light">Min Temp: ${element.day.mintemp_c}&deg;C</h6>
+                            <h6 class="text-light">Max Wind: ${element.day.maxwind_kph} kph</h6>
+                            <h6 class="text-light">Avg Wind: ${element.day.avgvis_km} km</h6>
+                            <h6 class="text-light">Avg Humidity: ${element.day.avghumidity} %</h6>
+                        </div>
+                        <div class="col-5">
+                            <img src="${element.day.condition.icon}" alt="">
+                            <h6 class="text-light">${element.day.condition.text}</h6>
+                            <h6 class="text-light">${element.day.avgtemp_c}&deg;C(Temp)</h6>
+                            <h6 class="text-light">${element.day.maxwind_kph} kph(Wind speed)</h6>
+                        </div>
+                    </div>
+                </div>`
+
+                    $(".forecast").append(forecast_html)
+                })
             }
         })
-
     }
 
-
-
-    function GetWeatherForecast() {
-        getCurrent()
-        let key = "d05d406df1934de889338bb13f1f6430"
-        let url = `https://api.weatherbit.io/v2.0/forecast/minutely?lat=${lat}&lon=${long}&key=${key}`
-
-        $.ajax({
-            url: url,
-            type: 'get',
-            success: function(res) {
-                let last_item = res.data[res.data.length - 1]
-                $("#snow").text(last_item.precip)
-                $("#precip").text(last_item.snow)
-            }
-        })
-
+    function success(position) {
+        getWeatherForecast(position.coords.latitude, position.coords.longitude);
     }
 
-    getCurrent()
+    function error() {
+        alert('Sorry, no position available.');
+    }
+
+    const options = {
+        enableHighAccuracy: true,
+        maximumAge: 3000000,
+        timeout: 300000000
+    };
+
+
+
+    const watchID = navigator.geolocation.watchPosition(success, error, options);
+    console.log(watchID)
 </script>
 {% block script %} {% endblock script %}

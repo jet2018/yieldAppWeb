@@ -158,30 +158,20 @@
 
         <div class="col-md-4 ">
             <div class="card bg-none mt-5" id="cards-left">
-                <h5 class="font-weight-bold text-dark pl-2">#Weather alerts</h5>
-                <div class="mx-1 text-light">
-                    <h6 class="text-primary font-weight-bold"><i class="fa fa-map-marker  text-right"> </i>&nbsp;Current location </h6>
-                    <div class="text-left font-weight-bold text-primary">
-                        <strong> Lat: </strong><span id="lat" class=""></span>&nbsp; &nbsp; &nbsp;
-                        <div class="float-right text-light"><strong class=""> Long: </strong><span id="long" class=""></span></div>
-                    </div>
-                    <div id="alerts">
-                    </div>
+                <h5 class="font-weight-bold text-black pl-2">#Current location and weather</h5>
+                <div class="mx-1">
+                    <div class="location"></div>
                 </div>
             </div>
-
             <div class="card bg-none mt-1" id="cards-left">
-                <h5 class="font-weight-bold text-dark pl-2">#Weather forecast</h5>
-                <div class="mx-1 text-primary">
-                    <strong class="text">Precipitation: <span id="precip"></span></strong>
-                    <br>
-                    <strong>Snow: <span id="snow"></span></strong>
-                    <br>
-
+                <h5 class="font-weight-bold text-black pl-2">#Weather forecast</h5>
+                <div class="mx-1">
+                    <div class="forecast"></div>
                 </div>
+
             </div>
 
-            <div class="card border border-info mt-1" id="cards-left" style="border: solid;">
+            <div class="card border border-info mt-5" id="cards-left" style="border: solid;">
                 <div class="card-title">
                     <h5 class="font-weight-bold pl-2"> #Recent user tests</h5>
                     {% for test in tests reversed %}
@@ -223,6 +213,7 @@
                     </div>
                     {% endfor %}
                 </div>
+                <a href="https://www.weatherapi.com/" title="Free Weather API"><img src='//cdn.weatherapi.com/v4/images/weatherapi_logo.png' alt="Weather data by WeatherAPI.com" border="0"></a>
             </div>
 
             <footer class="text-center">
