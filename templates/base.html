@@ -314,9 +314,6 @@
         $.ajax({
             url: `https://api.weatherapi.com/v1/forecast.json?key=a533261a909449ba8ac200546210411&q=${lat}, ${long}&days=7&aqi=no&alerts=no`,
             type: 'get',
-            beforeSend: () => {
-                $('#forecast_final').html('<div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div>')
-            },
             success: function(res) {
                     var loc_html = `<div class="offset-0">
                     <div class="row">
@@ -364,6 +361,7 @@
 
     function error() {
         alert('Sorry, no position available.');
+        $('.forecast').text('Sorry, no position available. Please allow us to access your current location');
     }
 
     const options = {
