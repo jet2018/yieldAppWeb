@@ -312,10 +312,13 @@
 
     function getWeatherForecast(lat, long) {
         $.ajax({
-            url: `https://api.weatherapi.com/v1/forecast.json?key=a533261a909449ba8ac200546210411&q=${lat}, ${long}&days=2&aqi=no&alerts=no`,
+            url: `https://api.weatherapi.com/v1/forecast.json?key=a533261a909449ba8ac200546210411&q=${lat}, ${long}&days=7&aqi=no&alerts=no`,
             type: 'get',
+            beforeSend: () => {
+                $('#forecast_final').html('<div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div>')
+            },
             success: function(res) {
-                var loc_html = `<div class="offset-0">
+                    var loc_html = `<div class="offset-0">
                     <div class="row">
                         <div class="col-7 text-info">
                             <h6 class="text-light">Name: ${res.location.name}</h6>
@@ -333,30 +336,25 @@
                         </div>
                     </div>
                 </div>`
-                $(".location").html(loc_html)
-                res.forecast.forecastday.forEach(element => {
-                    var forecast_html = `<div class="offset-0">
-                    <div class="row">
-                        <div class="col-7 text-info">
-                            <h6 class="text-light">Date: ${element.date}</h6>
-                            <h6 class="text-light">Max Temp: ${element.day.maxtemp_c}&deg;C</h6>
-                            <h6 class="text-light">Min Temp: ${element.day.mintemp_c}&deg;C</h6>
-                            <h6 class="text-light">Max Wind: ${element.day.maxwind_kph} kph</h6>
-                            <h6 class="text-light">Avg Wind: ${element.day.avgvis_km} km</h6>
-                            <h6 class="text-light">Avg Humidity: ${element.day.avghumidity} %</h6>
-                        </div>
-                        <div class="col-5">
-                            <img src="${element.day.condition.icon}" alt="">
-                            <h6 class="text-light">${element.day.condition.text}</h6>
-                            <h6 class="text-light">${element.day.avgtemp_c}&deg;C(Temp)</h6>
-                            <h6 class="text-light">${element.day.maxwind_kph} kph(Wind speed)</h6>
-                        </div>
+                    $(".location").html(loc_html)
+                    var forecast = ``
+                    for (var i = 0; i < res.forecast.forecastday.length; i++) {
+                        forecast += `<div class="row border p-2 m-1">
+                    <div class="col-8">
+                        <h6 class="text-light">${res.forecast.forecastday[i].date}</h6>
+                        <h6 class="text-light">${res.forecast.forecastday[i].day.condition.text}</h6>
+                        <h6 class="text-light">${res.forecast.forecastday[i].day.avgtemp_c}&deg;C(Temp)</h6>
+                        <h6 class="text-light">${res.forecast.forecastday[i].day.maxwind_kph} kph(Wind speed)</h6>
                     </div>
-                </div>`
+                    <div class="col-4">
+                        <img src="${res.forecast.forecastday[i].day.condition.icon}" alt="">
+                    </div>
+                    </div>`
 
-                    $(".forecast").append(forecast_html)
-                })
-            }
+                    }
+                    $('.forecast').html(forecast)
+                }
+                // console.log(res)
         })
     }
 
@@ -370,7 +368,7 @@
 
     const options = {
         enableHighAccuracy: true,
-        maximumAge: 3000000,
+        maximumAge: 30000000,
         timeout: 300000000
     };
 
