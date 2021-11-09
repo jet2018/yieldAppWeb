@@ -20,7 +20,7 @@
     }
     
     #cards-left {
-        background: linear-gradient(217deg, rgba(255, 0, 0, .8), rgba(255, 0, 0, 0) 70.71%), linear-gradient(127deg, rgba(0, 255, 0, .8), rgba(0, 255, 0, 0) 70.71%), linear-gradient(336deg, rgba(0, 0, 255, .8), rgba(0, 0, 255, 0) 70.71%);
+        background: #020c42;
     }
 </style>
 <!-- form for uploading a post -->
@@ -158,13 +158,13 @@
 
         <div class="col-md-4 ">
             <div class="card bg-none mt-5" id="cards-left">
-                <h5 class="font-weight-bold text-black pl-2">#Current location and weather</h5>
+                <h5 class="font-weight-bold text-white pl-2">#Current location and weather</h5>
                 <div class="mx-1">
                     <div class="location"></div>
                 </div>
             </div>
             <div class="card bg-none mt-1" id="cards-left">
-                <h5 class="font-weight-bold text-black pl-2">#Weather forecast(Weekly)</h5>
+                <h5 class="font-weight-bold text-white pl-2">#Weather forecast(Weekly)</h5>
                 <div class="mx-1">
                     <div class="forecast"></div>
                 </div>
@@ -173,7 +173,7 @@
 
             <div class="card border border-info mt-1" id="cards-left" style="border: solid;">
                 <div class="card-title">
-                    <h5 class="font-weight-bold pl-2"> #Recent user tests</h5>
+                    <h5 class="font-weight-bold pl-2 text-white"> #Recent user tests</h5>
                     {% for test in tests reversed %}
                     <div class="text-left pl-2 pt-2 mt-2" id="post{{post.id}}" style="width: 100%">
                         <div class="user-block w-100">
@@ -195,7 +195,7 @@
 
             <div class="card border border-info mt-1" id="cards-left" style="border: solid;">
                 <div class="card-title">
-                    <h5 class="font-weight-bold pl-2"> #Leading stories</h5>
+                    <h5 class="font-weight-bold pl-2 text-white"> #Leading stories</h5>
                     {% for post in top_posts reversed %}
                     <div class="text-left pl-2 pt-2 mt-2" id="post{{post.id}}" style="width: 100%">
                         <div class="user-block w-100">
@@ -206,7 +206,7 @@
                       
                                      {% if post.posted_by == user %} You {% else %} <a href="#">{{ post.posted_by.username|capfirst }} {{ post.posted_by.last_name|capfirst }} {{ post.posted_by.first_name|capfirst }}</a>{% endif %}
 					<br>
-					<a href="{% url 'posts:single_post' post.slug %}">{{ post.title|capfirst|truncatechars:200 }}</a>
+					<a class="text-white" href="{% url 'posts:single_post' post.slug %}">{{ post.title|capfirst|truncatechars:200 }}</a>
                     </span>
                             <span class="description">{{ post.posted_on|naturaltime }}</span>
                         </div>
