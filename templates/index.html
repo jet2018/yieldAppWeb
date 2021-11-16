@@ -1,124 +1,187 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
     <!-- Bootstrap 4 -->
     <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
     <title>YieldUp | Welcome</title>
-</head>
-<style>
+  </head>
+  <style>
     #main {
-        background: rgb(2, 0, 36);
-        background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 36%, rgba(0, 212, 255, 1) 100%);
+      background: rgb(2, 0, 36);
+      background: linear-gradient(
+        90deg,
+        rgba(2, 0, 36, 1) 0%,
+        rgba(9, 9, 121, 1) 36%,
+        rgba(0, 212, 255, 1) 100%
+      );
     }
-    
+
     #bg-color {
-        background: rgb(2, 0, 36);
+      background: rgb(2, 0, 36);
     }
-</style>
+  </style>
 
-
-<body class="">
+  <body class="">
     <center>
-        <div class="preloader-wrapper big active mx-auto">
-            <div class="spinner-layer spinner-blue">
-                <div class="circle-clipper left">
-                    <div class="circle"></div>
-                </div>
-                <div class="gap-patch">
-                    <div class="circle"></div>
-                </div>
-                <div class="circle-clipper right">
-                    <div class="circle"></div>
-                </div>
-            </div>
+      <div class="preloader-wrapper big active mx-auto">
+        <div class="spinner-layer spinner-blue">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div>
+          <div class="gap-patch">
+            <div class="circle"></div>
+          </div>
+          <div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
         </div>
+      </div>
     </center>
-    <section id="body" style="display:none">
-        <nav>
-            <div class="nav-wrapper" id="bg-color">
-                <a href="#!" class="brand-logo"><img src="{% static 'images/icon.png' %}" class="rounded" width="60"></a>
-                <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-                <ul class="right hide-on-med-and-down">
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#inspiration">Inspiration</a></li>
-                    <li><a href="#stack">Stack</a></li>
-                    <li><a href="#inclusion">Inclusion</a></li>
-                    <li><a href="{% url 'posts:login' %}" class="waves-effect waves-light btn"> Login </a></li>
-                    <li><a href="{% url 'posts:register' %}" class="waves-effect waves-light btn">Register</a></li>
-                </ul>
-            </div>
-        </nav>
-
-        <ul class="sidenav" id="mobile-demo">
-            <li><a href="#about">About</a></li>
+    <section id="body" style="display: none">
+      <nav>
+        <div class="nav-wrapper" id="bg-color">
+          <a href="#!" class="brand-logo"
+            ><img
+              src="{% static 'images/icon.png' %}"
+              class="rounded"
+              width="60"
+          /></a>
+          <a href="#" data-target="mobile-demo" class="sidenav-trigger"
+            ><i class="material-icons">menu</i></a
+          >
+          <ul class="right hide-on-med-and-down">
+            <li><a href="#about">What we do</a></li>
             <li><a href="#inspiration">Inspiration</a></li>
             <li><a href="#stack">Stack</a></li>
             <li><a href="#inclusion">Inclusion</a></li>
-            <li><a href="{% url 'posts:login' %}" class="waves-effect waves-light btn"> Login </a></li>
-            <li><a href="{% url 'posts:register' %}" class="waves-effect waves-light btn">Register</a></li>
+            <li>
+              <a
+                href="{% url 'posts:login' %}"
+                class="waves-effect waves-light btn"
+              >
+                Login
+              </a>
+            </li>
+            <li>
+              <a
+                href="{% url 'posts:register' %}"
+                class="waves-effect waves-light btn"
+                >Register</a
+              >
+            </li>
+          </ul>
+        </div>
+      </nav>
 
-        </ul>
-        <section id="main" class="row">
-            <div class="col container s6 l6 xl6 xs6 m6">
-                <h1 class="white-text">YieldUp </h1>
-                <h3 class="white-text">Diagnose, connect, forecast</h3>
-                <a href="" class="waves-effect waves-light btn-large z-depth-5">Get started now </a>
-                <div class="left-align" style="margin-top: 100px;">
-                    <h5 class="white-text">Get connected to expert farmers, medical personnel and other stakeholders.
-                    </h5>
-                </div>
-            </div>
-
-            <div class="col s6 l6 xl6 xs6 m6">
-                <img src="{% static 'images/yieldup2.png' %}" style="width: 100%;" alt="" class="responsive-img">
-            </div>
-        </section>
-
-
-        <div class="row center-align">
-
-            <div class="col s4 m4">
-                <i class="material-icons large right-align">flash_on</i>
-                <!-- Promo Content 1 goes here -->
-            </div>
-            <div class="col s4 m4">
-                <i class="material-icons large center-align">settings</i>
-                <!-- Promo Content 2 goes here -->
-            </div>
-            <div class="col s4 m4">
-                <i class="material-icons large left-align">call_split</i>
-                <!-- Promo Content 3 goes here -->
-            </div>
-
+      <ul class="sidenav" id="mobile-demo">
+        <li><a href="#about">What we do</a></li>
+        <li><a href="#inspiration">Inspiration</a></li>
+        <li><a href="#stack">Stack</a></li>
+        <li><a href="#inclusion">Inclusion</a></li>
+        <li>
+          <a
+            href="{% url 'posts:login' %}"
+            class="waves-effect waves-light btn"
+          >
+            Login
+          </a>
+        </li>
+        <li>
+          <a
+            href="{% url 'posts:register' %}"
+            class="waves-effect waves-light btn"
+            >Register</a
+          >
+        </li>
+      </ul>
+      <section id="main" class="row">
+        <div class="col container s6 l6 xl6 xs6 m6">
+          <h1 class="white-text">YieldUp</h1>
+          <h3 class="white-text">Diagnose, connect, forecast</h3>
+          <a
+            href="{% url 'posts:login' %}"
+            class="waves-effect waves-light btn-large z-depth-5"
+            >Get started now
+          </a>
+          <div class="left-align" style="margin-top: 100px">
+            <h5 class="white-text">
+              Get connected to expert farmers, medical personnel and other
+              stakeholders.
+            </h5>
+          </div>
         </div>
 
-    </section>
-</body>
+        <div class="col s6 l6 xl6 xs6 m6">
+          <img
+            src="{% static 'images/yieldup2.png' %}"
+            style="width: 100%"
+            alt=""
+            class="responsive-img"
+          />
+        </div>
+      </section>
 
+      <div class="row center-align scale-transition" id="about">
+        <div class="col s4 m4 card push-1">
+          <i class="material-icons large right-align blue-text">flash_on</i>
+          <h5 class="blue-text">Diagnose</h5>
+          <p class="dark-text center-align">
+            With this service, you grab our mobile app from our web app, upload
+            a live or saved image of your crop, we give you back results
+            alongside a token.
+          </p>
+        </div>
+
+        <div class="col s4 card m4">
+          <i class="material-icons large center-align cyan-text">settings</i>
+          <h5 class="blue-text">Profiles</h5>
+          <p class="dark-text center-align">
+            We have a large database of farmers, medical personnel and other
+            stakeholders. You can search for them by name, location or
+            expertise.
+          </p>
+        </div>
+        <div class="col s4 m4 card">
+          <i class="material-icons large left-align blue-text">call_split</i>
+          <h5 class="blue-text">Connect</h5>
+          <p class="dark-text center-align">
+            Connect with other farmers and medical personnel, you can also
+            connect with other stakeholders, such as the government, NGOs,
+            farmers, etc.
+          </p>
+        </div>
+      </div>
+    </section>
+  </body>
 </html>
 <!-- jQuery -->
 <script src="{% static 'plugins/jquery/jquery.min.js' %} "></script>
 <!-- Compiled and minified JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js "></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var elems = document.querySelectorAll('.sidenav');
-        var instances = M.Sidenav.init(elems, options);
-    });
+  document.addEventListener("DOMContentLoaded", function () {
+    var elems = document.querySelectorAll(".sidenav");
+    var instances = M.Sidenav.init(elems, options);
+  });
 
-    // Or with jQuery
+  // Or with jQuery
 
-    $(document).ready(function() {
-        $('.sidenav').sidenav();
-        $('.preloader-wrapper').fadeOut();
-        $('#body').fadeIn();
-    });
+  $(document).ready(function () {
+    $(".sidenav").sidenav();
+    $(".preloader-wrapper").fadeOut();
+    $("#body").fadeIn();
+  });
 </script>

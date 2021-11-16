@@ -1,0 +1,314 @@
+{% load static %}
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>YieldUp</title>
+    <meta name="description" content="Disease diagnosis application" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="" />
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'images/icon.png' %}" />
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <!-- MDB -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css" rel="stylesheet" />
+
+    <style>
+        #section2 {
+            background: #c31432;
+            /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #240b36, #c31432);
+            /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #240b36, #c31432);
+            /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        }
+        
+        .card-sm-bg {
+            background: rgb(36, 0, 0);
+            background: radial-gradient( circle, rgba(36, 0, 0, 1) 0%, rgba(15, 4, 36, 1) 18%, rgba(5, 14, 48, 1) 24%, rgba(20, 5, 52, 1) 26%, rgba(38, 6, 62, 1) 31%, rgba(12, 8, 80, 1) 40%, rgba(13, 6, 82, 1) 48%, rgba(13, 5, 83, 1) 55%, rgba(12, 10, 78, 1) 61%, rgba(11, 15, 72, 1) 68%, rgba(9, 22, 65, 1) 77%, rgba(4, 40, 47, 1) 100%);
+        }
+    </style>
+</head>
+
+<body>
+    <!--[if lt IE 7]>
+    <p class="browsehappy">
+      You are using an <strong>outdated</strong> browser. Please
+      <a href="#">upgrade your browser</a> to improve your experience.
+    </p>
+    <![endif]-->
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light" style="
+    background: rgb(2, 0, 36);
+    background: linear-gradient(
+    90deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(9, 9, 121, 1) 35%,
+    rgba(4, 40, 47, 1) 100%
+    );
+    ">
+        <!-- Container wrapper -->
+        <div class="container-fluid">
+            <!-- Toggle button -->
+            <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars"></i>
+      </button>
+
+            <!-- Collapsible wrapper -->
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <!-- Navbar brand -->
+                <a class="navbar-brand mt-2 mt-lg-0" href="#">
+                    <img src="{% static 'images/icon.png' %}" height="35" alt="" loading="lazy" />
+                </a>
+                <!-- Left links -->
+
+                <!-- Left links -->
+            </div>
+            <!-- Collapsible wrapper -->
+
+            <div class="d-flex align-items-center">
+                <a type="button" href="{% url 'posts:login' %}" class="btn btn-link px-3 me-2">Login</a
+          >
+          <a
+          href="{% url 'posts:register' %}"
+          type="button"
+          class="btn btn-primary me-3"
+          >
+          Sign up, it's free
+        </a>
+                <a class="btn btn-info px-3" target="_blank" href="https://drive.google.com/drive/folders/1vpTTZJqTJKMHYYDtcOMPfoy-JzGZO0l3" role="button"><i class="fab fa-android"></i> Get the app</a
+          >
+        </div>
+        <!-- Right elements -->
+      </div>
+      <!-- Container wrapper -->
+    </nav>
+    <!-- Navbar -->
+    
+    <main>
+      {% comment %}
+      <div id="intro" class="bg-image vh-100 shadow-1-strong"></div>
+      {% endcomment %}
+      <div
+      class="justify-content-between mt-5 pt-5"
+      style="
+      background: linear-gradient(
+      45deg,
+      rgba(29, 236, 197, 0.7),
+      rgba(91, 14, 214, 0.7) 100%
+      );
+      "
+      >
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <h1 class="display-1 font-weight-bolder text-light">
+              Welcome to yieldUp
+            </h1>
+            <p class="lead text-light">
+              We are a team of farmers, medical personnel and tech
+              enthusiates who are passionate about solving your farm problems.
+            </p>
+            <a
+            href="{% url 'posts:register' %}"
+            type="button"
+            class="btn btn-lg btn-primary"
+            >
+            Sign up, it's free
+          </a>
+            </div>
+            <div class="col-md-6">
+                <img src="{% static 'images/yieldup3.png' %}" style="height: 500px" />
+            </div>
+        </div>
+        </div>
+        {% comment %} here {% endcomment %}
+        <div class="bg-black mt-5 w-100">
+            <center>
+                <h3 class="display-4 p-5 my-3 text-light text-center">Services</h3>
+                <div class="row mb-2 container">
+                    {% comment %} accounts card {% endcomment %}
+                    <div class="border bg-dark border-info p-2 col-md-4 my-2" style="border-radius: 10px">
+                        <div class="card-img-top text-center p-1">
+                            <i class="fas text-light fa-cogs fa-10x"></i>
+                        </div>
+                        <div class="card-body">
+                            <h2 class="text-center text-light">Accounts</h2>
+                            <p class="text-light text-center">
+                                Setup your account as a farmer or a medical personnel and let us help you diagnose your crop diseases.
+                            </p>
+                        </div>
+                    </div>
+
+                    {% comment %} accounts card {% endcomment %}
+                    <div class="
+          border
+          bg-primary
+          border-primary
+          p-2
+          col-md-3
+          my-2
+          ms-1
+          me-1
+          fade-in
+          " style="border-radius: 10px">
+                        <div class="card-img-top text-light text-center p-1">
+                            <i class="fas fa-laptop-medical fa-10x"></i>
+                        </div>
+                        <div class="card-body">
+                            <h2 class="text-center text-light">Diagnosis</h2>
+                            <p class="text-light text-center">
+                                We will diagnose your crop diseases and give you the best possible solution.
+                                <span class="text-light">
+                This is the core of our services.</span
+                >
+              </p>
+            </div>
+          </div>
+          
+          {% comment %} weather card {% endcomment %}
+          <div
+          class="border bg-dark border-info p-2 col-md-4 my-2"
+          style="border-radius: 10px"
+          >
+          <div class="card-img-top text-light text-center p-1">
+            <i class="fas fa-sun fa-10x"></i>
+          </div>
+          <div class="card-body">
+            <h2 class="text-center text-light">Weather forecast</h2>
+            <p class="text-light text-center">
+              We have embedded weather forecast services to help you
+              understand the weather conditions in your area.
+            </p>
+          </div>
+        </div>
+        
+        {% comment %} specialists card {% endcomment %}
+        <div
+        class="border bg-dark border-info p-2 col-md-5 my-2 mx-3"
+        style="border-radius: 10px"
+        >
+        <div class="card-img-top text-light text-center p-1">
+          <i class="fas fa-briefcase fa-10x"></i>
+        </div>
+        <div class="card-body">
+          <h2 class="text-center text-light">Meet experts</h2>
+          <p class="text-light text-center">
+            We have a team of medical experts who are experts in
+            diagnosing crop diseases.
+          </p>
+        </div>
+      </div>
+      
+      {% comment %} accounts card {% endcomment %}
+      <div
+      class="border bg-dark border-info p-2 col-md-5 my-2 mx-3"
+      style="border-radius: 10px"
+      >
+      <div class="card-img-top text-light text-center p-1">
+        <i class="fas fa-hands-helping fa-10x"></i>
+      </div>
+      <div class="card-body">
+        <h2 class="text-center text-light">Help to help</h2>
+        <p class="text-center text-light">
+          Connect with the rest of the members, join discussions, and
+          get help from other members.
+        </p>
+      </div>
+    </div>
+  </div>
+</center>
+
+
+
+
+<!-- about the team -->
+
+<div class="mt-5" id="section2">
+  <h3 class="display-4 p-5 my-3 text-light text-center">Team</h3>
+  <div class="row mb-5 pt-1">
+    <!-- card 1 -->
+    <div class="col-md-3 border p-3 m-5">
+      <img src="https://avatars.githubusercontent.com/u/43230268?v=4" class="card-img-top" alt="JET EZRA"/>
+      <h3 class="text-center display-6 text-light card-title">Tumusiime Ezra</h3>
+      <p class="text-center text-light">(Founder YieldUp)</p>
+      <p class="card-text text-center text-white flow-text">
+          Senior Software Engineer at YieldUp and founder of YieldUp.
+      </p>
+    </div>
+
+    <!-- card 1 -->
+    <div class="col-md-3 border p-3 m-5">
+      <img src="{% static 'images/andrew.png' %}" class="card-img-top" alt="Andrew Okello"/>
+      <h3 class="text-center display-6 text-light card-title">Andrew Okello</h3>
+      <p class="text-center text-light">(Co-founder YieldUp)</p>
+      <p class="card-text text-center text-white flow-text">
+         Computer scientist, data scientist, responsible for all the AI applied
+      </p>
+    </div>
+
+    <div class="col-md-3 border p-3 m-5">
+      <img src="{% static 'images/wesley.png' %}" class="card-img-top" alt="Wesley Kambale"/>
+      <h3 class="text-center display-6 text-light card-title">Wesley Kambale</h3>
+      <p class="text-center text-light">YieldUp AI team</p>
+      <p class="card-text text-center text-white flow-text">
+         Computer scientist, data scientist, works along Mr. Andrew on the AI of the application
+      </p>
+    </div>
+
+     <div class="col-md-3 border p-3 m-5">
+      <img src="{% static 'images/kaggwa.png' %}" class="card-img-top" alt="Andrew Okello"/>
+      <h3 class="text-center display-6 text-light card-title">Dr. Ir Fred Kaggwa</h3>
+      <p class="text-center text-light">Lecturer Mbarara University</p>
+      <p class="card-text text-center text-white flow-text">
+        He is the research supervisor for this project and has worked tirelessly to publish the idea to its best.
+      </p>
+    </div>  
+
+    <div class="col-md-3 border p-3 m-5">
+      <img src="{% static 'images/pro.png' %}" class="card-img-top" alt="Andrew Okello"/>
+      <h3 class="text-center display-6 text-light card-title">Probuse Nimukama</h3>
+      <p class="text-center text-light">YieldUp mobile developer and maintainer</p>
+      <p class="card-text text-center text-white flow-text">
+         Expert software engineer, flutter enthusiast, also founder <i>profood</i>
+      </p>
+    </div>  
+    
+    <div class="col-md-3 border p-3 m-5">
+      <img src="{% static 'images/drake.png' %}" class="card-img-top" alt="Andrew Okello"/>
+      <h3 class="text-center display-6 text-light card-title">Drake Arinda</h3>
+      <p class="text-center text-light">Public Relations officer, Hive colab, Mbarara</p>
+      <p class="card-text text-center text-white flow-text">
+        Host of the application, provided a very cool condusive working environment for the development of the applications.
+      </p>
+    </div>  
+
+  </div>
+</div>
+</div>
+</div>
+</main>
+</body>
+
+</html>
+<!-- MDB -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js"></script>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body>
+
+</html>
+<!-- MDB -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js"></script>

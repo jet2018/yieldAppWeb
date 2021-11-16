@@ -175,6 +175,7 @@ if not DEBUG:
     AWS_LOCATION = 'static'
     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+    AWS_DEFAULT_ACL = None
 
     DEFAULT_FILE_STORAGE = env('DEFAULT_FILE_STORAGE')
     # Allow all host hosts/domain names for this site

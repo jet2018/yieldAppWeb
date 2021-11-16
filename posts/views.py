@@ -16,7 +16,7 @@ def index(request):
         topPosts = Post.objects.all().order_by("?")[:4]
         return render(request, 'posts/all_posts.html', {'posts': myposts, "tests": topTests, "top_posts": topPosts})
     else:
-        return render(request, 'index.html')
+        return render(request, 'splash.html')
 
 
 @login_required(login_url='/login/')
