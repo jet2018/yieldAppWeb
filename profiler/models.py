@@ -1,3 +1,4 @@
+from django.utils import timezone
 import datetime
 from django.db import models
 from django.contrib.auth.models import User
@@ -37,8 +38,8 @@ class Profile(models.Model):
 
 
 # comment this on first migrations
-now = datetime.datetime.now()
-expire_after_30 = now + datetime.timedelta(minutes=30.0)
+now = timezone.now()
+expire_after_30 = now + timezone.timedelta(minutes=30.0)
 code = str(int(datetime.datetime.timestamp(now)))
 # 1629184190
 # 1629184202

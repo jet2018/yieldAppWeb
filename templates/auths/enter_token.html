@@ -4,22 +4,26 @@
         <a href="{% url 'posts:index' %}"><b>Yield</b>Up</a>
     </div>
     <!-- /.login-logo -->
+
     <div class="card">
         <div class="card-body login-card-body">
-            <p class="login-box-msg">You forgot your password? Here you can easily retrieve a new password.</p>
+            <div class="alert d-none" id="message"></div>
+            <p class="login-box-msg">We have received your request to change your password and sent you an email with a token on the email address you provided on the previous screen, enter that token below to proceed. That token will be valid for only 30 minutes from the time
+                of its first issue</p>
 
-            <form action="{% url 'posts:forgot' %}" method="post">
+            <form action="{% url 'profile:check_code' %}" id="code_form" method="post">
+                {% csrf_token %}
                 <div class="input-group mb-3">
-                    <input type="email" class="form-control" placeholder="Email">
+                    <input type="number" minlength="10" maxlength="10" name="code" class="form-control" placeholder="Enter token">
                     <div class="input-group-append">
                         <div class="input-group-text">
-                            <span class="fas fa-envelope"></span>
+                            <span class="fas fa-password"></span>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <button type="submit" class="btn btn-warning btn-block">Request new password</button>
+                        <button type="submit" class="btn btn-warning btn-block">Verify code</button>
                     </div>
                     <!-- /.col -->
                 </div>
@@ -35,4 +39,28 @@
         <!-- /.login-card-body -->
     </div>
 </div>
-{% endblock content %}
+{% endblock content %} {% block script %}
+<script>
+    $("#code_form").submit(function(e) {
+        e.preventDefault()
+        var url = $(this).attr("action")
+        var data = $(this).serialize()
+        $.ajax({
+            url: url,
+            data: data,
+            type: "POST",
+            dataType: "json",
+            success: res => {
+                if (res.status) {
+                    window.location.href = `/users/${res.token}/recover/`
+                } else {
+                    $("#message").text(res.error).removeClass('d-none').addClass("alert-danger")
+                    setTimeout(function() {
+                        $("#message").fadeOut('slow').addClass("d-none").removeClass("alert-danger")
+                    }, 4000)
+                }
+            }
+        })
+    })
+</script>
+{% endblock script %}

@@ -1,60 +1,55 @@
-{% extends 'basic.html' %}
-
-
-{% block content %}
+{% extends 'basic.html' %} {% block content %}
 <div class="login-box">
-  <div class="login-logo">
-   <a href="{% url 'posts:index' %}" class="text-warning"><b>Yield</b>Up</a>
-  </div>
-     <div class="card">
-    <div class="card-body login-card-body">
-      <p class="login-box-msg">Sign in to start your session</p>
-     <div id="return-messages" class="alert"></div>
-      <form action="{% url 'posts:login' %}" method="post" id="test-form10">
-        {% csrf_token %}
-        <div class="input-group mb-3">
-          <input type="text" class="form-control" name="username" placeholder="Username">
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-user"></span>
-            </div>
-          </div>
-        </div>
-        <div class="input-group mb-3">
-          <input type="password" class="form-control" name="password" placeholder="Password">
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-lock"></span>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-7">
-            <div class="icheck-primary">
-              <a href="{% url 'posts:forgot' %}">I forgot my password</a>
-            </div>
-          </div>
-          <!-- /.col -->
-          <div class="col-5">
-            <button type="submit" id="LoginBtn" class="btn btn-warning btn-block">Sign In</button>
-          </div>
-          <!-- /.col -->
-        </div>
-      </form>
-
-
-      <p class="mb-0">
-        <a href="{% url 'posts:register' %}" class="text-center">Register a new membership</a>
-      </p>
+    <div class="login-logo">
+        <a href="{% url 'posts:index' %}" class="text-warning"><b>Yield</b>Up</a>
     </div>
-    <!-- /.login-card-body -->
-  </div>
-</div>
-    {% endblock content %}
+    <div class="card">
+        <div class="card-body login-card-body">
+            <p class="login-box-msg">Sign in to start your session</p>
+            <div id="return-messages" class="alert"></div>
+            <form action="{% url 'posts:login' %}" method="post" id="test-form10">
+                {% csrf_token %}
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" name="username" placeholder="Username">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-user"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="password" class="form-control" name="password" placeholder="Password">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-lock"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-7">
+                        <div class="icheck-primary">
+                            <a href="{% url 'profile:reset_password_with_token' %}">I forgot my password</a>
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-5">
+                        <button type="submit" id="LoginBtn" class="btn btn-warning btn-block">Sign In</button>
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </form>
 
-{% block script %}
-    <script>
-      $(document).on('submit', "#test-form10", function(e) {
+
+            <p class="mb-0">
+                <a href="{% url 'posts:register' %}" class="text-center">Register a new membership</a>
+            </p>
+        </div>
+        <!-- /.login-card-body -->
+    </div>
+</div>
+{% endblock content %} {% block script %}
+<script>
+    $(document).on('submit', "#test-form10", function(e) {
         $('#LoginBtn').text("Please wait...")
         e.preventDefault()
         form = $(this).serialize();
@@ -62,7 +57,7 @@
             type: 'post',
             url: $(this).attr('action'),
             data: form,
-            success: function (response) {
+            success: function(response) {
                 rs = response.result
                 cssNow = response.class
                 $('#LoginBtn').text("Sign in")
@@ -75,6 +70,5 @@
             }
         })
     })
-
-    </script>
+</script>
 {% endblock script %}

@@ -41,7 +41,7 @@
     </style>
 </head>
 
-<body>
+<body class="bg-black">
     <!--[if lt IE 7]>
     <p class="browsehappy">
       You are using an <strong>outdated</strong> browser. Please
@@ -62,7 +62,7 @@
         <!-- Container wrapper -->
         <div class="container-fluid">
             <!-- Toggle button -->
-            <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler text-light" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <i class="fas fa-bars"></i>
       </button>
 
@@ -88,7 +88,7 @@
           >
           Sign up, it's free
         </a>
-                <a class="btn btn-info px-3" target="_blank" href="https://drive.google.com/drive/folders/1vpTTZJqTJKMHYYDtcOMPfoy-JzGZO0l3" role="button"><i class="fab fa-android"></i> Get the app</a
+                <a class="btn btn-info pl-3" target="_blank" href="https://drive.google.com/drive/folders/1vpTTZJqTJKMHYYDtcOMPfoy-JzGZO0l3" role="button"><i class="fab fa-android"></i> Get the app</a
           >
         </div>
         <!-- Right elements -->
@@ -129,7 +129,7 @@
             Sign up, it's free
           </a>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 d-none d-md-inline-block">
                 <img src="{% static 'images/yieldup3.png' %}" style="height: 500px" />
             </div>
         </div>
@@ -140,7 +140,7 @@
                 <h3 class="display-4 p-5 my-3 text-light text-center">Services</h3>
                 <div class="row mb-2 container">
                     {% comment %} accounts card {% endcomment %}
-                    <div class="border bg-dark border-info p-2 col-md-4 my-2" style="border-radius: 10px">
+                    <div class="border bg-dark border-info p-2 col-md-4 col-sm-12  my-2" style="border-radius: 10px">
                         <div class="card-img-top text-center p-1">
                             <i class="fas text-light fa-cogs fa-10x"></i>
                         </div>
@@ -158,7 +158,7 @@
           bg-primary
           border-primary
           p-2
-          col-md-3
+          col-md-3 col-sm-12 
           my-2
           ms-1
           me-1
@@ -180,7 +180,7 @@
           
           {% comment %} weather card {% endcomment %}
           <div
-          class="border bg-dark border-info p-2 col-md-4 my-2"
+          class="border bg-dark border-info p-2 col-md-4 col-sm-12  my-2"
           style="border-radius: 10px"
           >
           <div class="card-img-top text-light text-center p-1">
@@ -197,7 +197,7 @@
         
         {% comment %} specialists card {% endcomment %}
         <div
-        class="border bg-dark border-info p-2 col-md-5 my-2 mx-3"
+        class="border bg-dark border-info p-2 col-md-5 col-sm-12  my-2 mx-3"
         style="border-radius: 10px"
         >
         <div class="card-img-top text-light text-center p-1">
@@ -214,7 +214,7 @@
       
       {% comment %} accounts card {% endcomment %}
       <div
-      class="border bg-dark border-info p-2 col-md-5 my-2 mx-3"
+      class="border bg-dark border-info p-2 col-md-5 col-sm-12  my-2 mx-3"
       style="border-radius: 10px"
       >
       <div class="card-img-top text-light text-center p-1">
@@ -299,11 +299,23 @@
 </div>
 
 <!-- contribution -->
-<div class="mt-5 contribution">
+<div class="mt-5 contribution pb-3">
 <h3 class="display-4 p-5 my-3 text-light text-center">Contributions</h3>
-<div class="alert border border-info bg-black mx-2">
-  <h6 class="display-6">We totally accept your mind on this great idea. Contributions will be allowed from 20th, December 2021, meanwhile you can be using the idea. You need to know  that this project has been declared totally open source!!</h6>
+<div class="alert border border-info bg-black mx-2 mb-5">
+  <h6 class="display-6 text-gray">We totally accept your mind on this great idea. Contributions will be allowed from <u>20th, December 2021</u>, meanwhile you can be using the idea. You need to know  that this project has been declared totally open source!!</h6>
+
+  <a href="" class="btn text-light btn-flat btn-info mb-1 float-end" type="button">This button will redirect you to the repos when ready</a>
 </div>
+</div>
+
+<div class="mt-5 contribution pb-3">
+  <h1 class="text-center display-4 p-5 my-3 text-light text-center">Stack</h1>
+  <div class="alert border border-info bg-black mx-2 mb-5">
+    <h1 class="display-6 text-center"><i class="fab fa-python text-light"></i> Python, Django, JS, JQuery, Flutter, Tensorflow & Keras, HTML5, CSS3 </h1>
+
+    <p class="text-center">This section is meant for anyone willing to contribute, you can choose from the above stack and you have your independent issues to work on in the language of your choice.</p>
+  </div>
+
 </div>
 </div>
 </div>
