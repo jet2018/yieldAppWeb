@@ -1,6 +1,7 @@
 from datetime import datetime
 from django import conf
 from django.shortcuts import redirect, render, get_object_or_404
+from django.views.generic.base import TemplateView
 from .models import Profile, GenerateCodes
 from posts.models import Post
 from django.contrib.auth.models import User
@@ -20,6 +21,18 @@ from django.utils import timezone
 # Create your views here.
 # def SendMailer(user, )
 # print(datetime.now())
+
+
+def check_code_validity(code):
+    try:
+        profile = GenerateCodes.objects.get(token=code)
+        # check expiry
+        if profile.has_expired:
+            return "expired"
+        else:
+            return "valid"
+    except GenerateCodes.DoesNotExist:
+        return "error"
 
 
 def Send_code_by_mail(user, email, template="reset_password.html", reason=""):
@@ -45,10 +58,23 @@ def Send_code_by_mail(user, email, template="reset_password.html", reason=""):
     try:
         # check if the user already has a code already
         now = timezone.now()  # current datetime
-        profile = GenerateCodes.objects.get(user=user, expires_on__gt=now)
+        profile = GenerateCodes.objects.filter(
+            user=user).order_by("-generated_on")[0]
+        check_1 = check_code_validity(profile.token)
+        if check_1 == "valid":
+            # was found, so resend it.
+            pass
+        elif check_1 == "expired":
+            # delete the expired and send a new one
+            profile.delete()
+            profile = GenerateCodes.objects.create(user=user, reason=reason)
+        elif check_1 == "error":
+            # was not found, continue to create a new one
+            profile = GenerateCodes.objects.create(user=user, reason=reason)
     except GenerateCodes.DoesNotExist:
         # create one
         profile = GenerateCodes.objects.create(user=user, reason=reason)
+
     subject = profile.reason
     # for html visible browsers
     html_message = render_to_string("mail_templates/"+template, {
@@ -69,10 +95,11 @@ def Send_code_by_mail(user, email, template="reset_password.html", reason=""):
         return False
 
 
-def ResetCode(request):
+def request_code(request):
     if request.is_ajax():
         # if an email was sent via POST request
-        if request.POST.get("email"):
+        email = request.POST.get("email")
+        if email:
             email = request.POST.get("email")
             try:
                 user = User.objects.get(email=email)
@@ -83,65 +110,53 @@ def ResetCode(request):
 
             sender = Send_code_by_mail(
                 user, email, reason="YieldUp Reset Password")
-            if sender:
-                return JsonResponse({"message": "Code sent to your email", "status": True})
+            return JsonResponse({"message": "Code sent to your email", "status": True})
         except Exception as e:
             print(e)
-            return e
+            return JsonResponse({"message": "Something went wrong, please try again", "status": False})
     return render(request, "auths/forgot_password.html")
 
 
-def CheckCode(request):
-    if request.is_ajax():
-        code = request.POST.get("code")
-        if not code:
-            return JsonResponse({"error": "Code is required", "status": False})
-        try:
-            profile = GenerateCodes.objects.get(token=code)
-            # redirection here!
-            if profile.expires_on >= timezone.now():
-                return JsonResponse({"error": "Code has already expired, request a new one.", "status": False})
-            else:
-                return JsonResponse({"token": profile.token, "status": True})
-        except GenerateCodes.DoesNotExist:
-            return JsonResponse({"error": "Code does not exist!", "status": False})
-    return render(request, "auths/enter_token.html")
+class EnterCodeView(TemplateView):
+    template_name = "auths/enter_token.html"
 
 
-def CheckCodeExpiry(request):
-    if request.is_ajax():
-        code = request.POST.get("token")
-
-        # get the code
-        try:
-            check_code = GenerateCodes.objects.get(token=code)
-            # check expiry
-            if check_code.expires_on >= timezone.now():
-                return JsonResponse({"message": "The code is already expired", "expired": True})
-            else:
-                return JsonResponse({"message": "Code is still valid", "expired": False})
-        except GenerateCodes.DoesNotExist:
-            return JsonResponse({"message": "No associated code", "exist": False})
+def check_expiriration(request):
+    code = request.GET.get("code")
+    if not code:
+        return JsonResponse({"message": "Code is required", "status": False})
+    checker = check_code_validity(code)
+    if checker == "valid":
+        return JsonResponse({"message": "Code is valid", "status": True})
+    elif checker == "expired":
+        return JsonResponse({"message": "Code is expired", "status": False})
+    elif checker == "error":
+        return JsonResponse({"message": "Code does not exist", "status": False})
+    return JsonResponse({"message": "Something went wrong, please try again", "status": False})
 
 
 def ResetPassword(request, code):
     if request.is_ajax():
-        new_password = request.POST.get("new_password")
-        confirm_password = request.POST.get("confirm_password")
-
+        new_password = request.POST["new_password"]
+        confirm_password = request.POST["confirm_password"]
+        print(new_password)
+        print(confirm_password)
         if new_password != confirm_password:
             return JsonResponse({"error": "Passwords are not matching"})
         elif len(confirm_password) < 8:
             return JsonResponse({"error": "Password is too week"})
         else:
-            profile = GenerateCodes.objects.get(token=code)
-            if profile.expires_on >= timezone.now():
-                return JsonResponse({"error": "Code has already expired, request a new one."})
-            else:
-                user = profile.user
-                user.set_password(confirm_password)
-                user.save()
-                return JsonResponse({"success": "Password reset successfully"})
+            checker = check_code_validity(code)
+            if checker == "valid":
+                profile = GenerateCodes.objects.get(token=code)
+                profile.user.set_password(new_password)
+                profile.user.save()
+                profile.delete()
+                return JsonResponse({"success": "Password changed successfully"})
+            elif checker == "expired":
+                return JsonResponse({"error": "Code is expired"})
+            elif checker == "error":
+                return JsonResponse({"error": "Code does not exist"})
     return render(request, "auths/recover_password.html", {"code": code})
 
 

@@ -10,7 +10,7 @@
             <form action="{% url 'posts:login' %}" method="post" id="test-form10">
                 {% csrf_token %}
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" name="username" placeholder="Username">
+                    <input type="text" class="form-control" name="username" placeholder="Username or Email">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-user"></span>

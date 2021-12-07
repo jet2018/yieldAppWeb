@@ -1,3 +1,4 @@
+from django.db.models.query_utils import Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse, response
 from django.views.generic import TemplateView, DetailView
@@ -29,14 +30,22 @@ def login(request):
     if request.is_ajax():
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user = auth.authenticate(username=username, password=password)
-        if user is not None:
-            auth.login(request, user)
-            result = "Login successfull"
-            classNow = "success"
-        else:
-            result = "No member is associated with the given credentials"
-            classNow = "danger"
+        try:
+            user_check_point_1 = User.objects.get(
+                Q(username=username) | Q(email=username))
+            user = auth.authenticate(
+                username=user_check_point_1.username, password=password)
+            if user is not None:
+                auth.login(request, user)
+                result = "Login successfull"
+                classNow = "success"
+            else:
+                result = "No member is associated with the given credentials"
+                classNow = "danger"
+        except User.DoesNotExist:
+            result = "The username or email you entered does not exist!"
+            classNow = 'danger'
+
         return JsonResponse({"result": result, "class": classNow}, status=200)
     return render(request, 'auths/login.html')
 

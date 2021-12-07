@@ -38,11 +38,12 @@ class Profile(models.Model):
 
 
 # comment this on first migrations
-now = timezone.now()
-expire_after_30 = now + timezone.timedelta(minutes=30.0)
-code = str(int(datetime.datetime.timestamp(now)))
-# 1629184190
-# 1629184202
+
+
+code = str(int(datetime.datetime.timestamp(datetime.datetime.now())))[-6:]
+# harmonizing timezones
+today = timezone.now()
+expire_after_30 = today + timezone.timedelta(minutes=30)
 
 
 class GenerateCodes(models.Model):
@@ -52,6 +53,14 @@ class GenerateCodes(models.Model):
     generated_on = models.DateTimeField(auto_now=True)
     expires_on = models.DateTimeField(default=expire_after_30)
     reason = models.CharField(max_length=100, null=True, blank=True)
+
+    @property
+    def has_expired(self):
+        today = timezone.now()
+        if today >= self.expires_on:
+            return True
+        else:
+            return False
 
 # signals
 

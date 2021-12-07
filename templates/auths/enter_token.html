@@ -11,10 +11,10 @@
             <p class="login-box-msg">We have received your request to change your password and sent you an email with a token on the email address you provided on the previous screen, enter that token below to proceed. That token will be valid for only 30 minutes from the time
                 of its first issue</p>
 
-            <form action="{% url 'profile:check_code' %}" id="code_form" method="post">
+            <form action="{% url 'profile:check_expiriration' %}" id="code_form" method="post">
                 {% csrf_token %}
                 <div class="input-group mb-3">
-                    <input type="number" minlength="10" maxlength="10" name="code" class="form-control" placeholder="Enter token">
+                    <input type="number" minlength="10" id="code" maxlength="10" name="code" class="form-control" placeholder="Enter token">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-password"></span>
@@ -42,22 +42,20 @@
 {% endblock content %} {% block script %}
 <script>
     $("#code_form").submit(function(e) {
-        e.preventDefault()
-        var url = $(this).attr("action")
-        var data = $(this).serialize()
+        e.preventDefault();
+        url = $(this).attr('action');
+        data = $("#code_form").serialize();
+        code = $("#code").val();
         $.ajax({
             url: url,
             data: data,
-            type: "POST",
-            dataType: "json",
-            success: res => {
+            type: 'GET',
+            success: function(res) {
                 if (res.status) {
-                    window.location.href = `/users/${res.token}/recover/`
+                    alert(res.message)
+                    window.location.href = `/users/${code}/recover/`;
                 } else {
-                    $("#message").text(res.error).removeClass('d-none').addClass("alert-danger")
-                    setTimeout(function() {
-                        $("#message").fadeOut('slow').addClass("d-none").removeClass("alert-danger")
-                    }, 4000)
+                    alert(res.message)
                 }
             }
         })
